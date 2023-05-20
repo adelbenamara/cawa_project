@@ -1,0 +1,101 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Controller;
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import DAO.ClientDAO;
+import Model.Client;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.annotation.WebServlet;
+public class ClientController extends HttpServlet {
+    private ClientDAO clientDAO;
+
+    public void init() {
+        // Initialiser le DAO du client
+        clientDAO = new ClientDAO();
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            String action = request.getServletPath();
+            
+            switch (action) {
+                case "/clients":
+                    getAllClients(request, response);
+                    break;
+                case "/ajouter-client":
+                    showAddClientForm(request, response);
+                    break;
+                default:
+                    response.sendRedirect("accueil.jsp");
+                    break;
+            }
+        } catch (ClassNotFoundException ex) {
+          System.out.println(" erour :"+ex.getMessage());
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            String action = request.getServletPath();
+            
+            switch (action) {
+                case "/ajouter-client":
+                     addClient(request, response);
+                break;
+                case "/supprimer-client":
+                    deleteClient(request, response);
+                    break;
+                default:
+                    response.sendRedirect("accueil.jsp");
+                    break;
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClientController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void getAllClients(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ClassNotFoundException {
+        List<Client> clients = clientDAO.getAllClients();
+        request.setAttribute("clients", clients);
+        request.getRequestDispatcher("clients.jsp").forward(request, response);
+    }
+
+    private void showAddClientForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("ajouter-client.jsp").forward(request, response);
+    }
+
+    private void addClient(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ClassNotFoundException {
+        String nom = request.getParameter("nom");
+        String telephone = request.getParameter("telephone");
+        String email = request.getParameter("email");
+
+        Client client = new Client(nom, telephone, email);
+        clientDAO.addClient(client);
+
+        response.sendRedirect("clients");
+    }
+
+    private void deleteClient(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ClassNotFoundException {
+        String id = request.getParameter("clientId");
+
+        clientDAO.deleteClient(id);
+
+        response.sendRedirect("clients");
+    }
+}
