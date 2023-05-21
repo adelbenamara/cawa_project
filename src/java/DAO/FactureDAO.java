@@ -42,9 +42,10 @@ public class FactureDAO {
                     int id = resultSet.getInt("id");
                     Date dateFacture = resultSet.getDate("date_facture");
                     String modePaiement = resultSet.getString("mode_paiement");
-                    int clientId = resultSet.getInt("id_client");
+                    int id_client = resultSet.getInt("id_client");
                     
-                    Facture facture = new Facture(clientId, dateFacture, modePaiement, clientId);
+                    Facture facture = new Facture(id, dateFacture, modePaiement, id_client);
+                    
                     factures.add(facture);
                 }   }
         } catch (SQLException e) {
@@ -59,7 +60,7 @@ public class FactureDAO {
             String query = "INSERT INTO factures (date_facture, mode_paiement, id_client) VALUES (CURDATE(), ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, facture.getModePaiement());
-                statement.setInt(2, facture.getClient());
+                statement.setInt(2, facture.getIdClient());
                 
                 statement.executeUpdate();
             }
@@ -86,8 +87,7 @@ public class FactureDAO {
         try {
             String query = "DELETE FROM factures WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setInt(1, id);
-                
+                statement.setInt(1, id);    
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

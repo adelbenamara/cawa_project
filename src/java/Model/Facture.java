@@ -18,24 +18,24 @@ public class Facture {
     private float totalHT;
     private float totalTTC;
     private String modePaiement;
-    private int  id_client;
+    private int  idClient;
     private List<LigneFacture> ligneFactureList;
 
     
        public Facture( String modePaiement,int  id_client) {
         this.modePaiement = modePaiement;
-        this.id_client= id_client;
+        this.idClient= id_client;
        
     }
        
    
     
     
-    public Facture(int numFacture, Date dateFacture, String modePaiement, int id_client) {
-        this.numFacture = numFacture;
+    public Facture(int id, Date dateFacture, String modePaiement, int id_client) {
+        this.numFacture = id;
         this.dateFacture = dateFacture;
         this.modePaiement = modePaiement;
-        this.id_client= id_client;
+        this.idClient= id_client;
     }
 
     public int getNumFacture() {
@@ -78,12 +78,12 @@ public class Facture {
         this.modePaiement = modePaiement;
     }
 
-    public int getClient() {
-        return id_client;
+    public int getIdClient() {
+        return idClient;
     }
 
-    public void setClient(int client) {
-        this.id_client = client;
+    public void setIdClient(int client) {
+        this.idClient = client;
     }
 
     public List<LigneFacture> getLigneFactureList() {

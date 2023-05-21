@@ -6,8 +6,9 @@
 package Controller;
 import DAO.FactureDAO;
 import DAO.ArticleDAO;
+import DAO.ClientDAO;
 import Model.Facture;
-
+import Model.Client;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,13 +22,14 @@ import java.util.logging.Logger;
 public class FactureController extends HttpServlet {
     private FactureDAO factureDAO;
     private ArticleDAO articleDAO;
-
+    private ClientDAO clientDAO;
     @Override
     public void init() throws ServletException {
         try {
             super.init();
             factureDAO = new FactureDAO();
             articleDAO = new ArticleDAO();
+            clientDAO = new ClientDAO();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FactureController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -38,14 +40,21 @@ public class FactureController extends HttpServlet {
         String action = request.getServletPath();
         
         if (action != null && action.equals("/ajouter-facture")) {
-            
-        request.getRequestDispatcher("ajouter-facture.jsp").forward(request, response);   
+            try {
+                List<Client> clients =   clientDAO.getAllClients();
+                request.setAttribute("clients", clients);   
+                request.getRequestDispatcher("ajouter-facture.jsp").forward(request, response);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FactureController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         
-        }else if (action != null  && action.equals("factures") ) {
-            System.out.println("dkhal /factures");
-        List<Facture> factures = factureDAO.getAllFactures();
-        request.setAttribute("/factures", factures);
-        request.getRequestDispatcher("factures.jsp").forward(request, response);}
+        }else if (action != null  && action.equals("/factures") ) {     
+                List<Facture> factures = factureDAO.getAllFactures();
+              
+                request.setAttribute("factures", factures);
+                request.getRequestDispatcher("factures.jsp").forward(request, response);
+            
+}
     }
 
     @Override
@@ -54,36 +63,32 @@ public class FactureController extends HttpServlet {
 
         if (action != null && action.equals("/ajouter-facture")) {
             addFacture(request, response);
-        } else if (action != null && action.equals("addFactureLine")) {
-            addFactureLine(request, response);
+        } else if (action != null && action.equals("/supprimer-facture")) {
+           deleteFacture(request, response);
         } 
     }
 
     private void addFacture(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String dateFacture = request.getParameter("dateFacture");
+      
         String modePaiement = request.getParameter("modePaiement");
         int clientId = Integer.parseInt(request.getParameter("clientId"));
 
         // Create a new Facture object
         Facture facture = new Facture(modePaiement, clientId);
-
-        // Add the facture to the database
+          System.out.println(" create facteur avec succes"); 
+       // Add the facture to the database
         factureDAO.addFacture(facture);
 
         // Redirect to the factures page
         response.sendRedirect(request.getContextPath() + "/factures");
     }
 
-    private void addFactureLine(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int factureId = Integer.parseInt(request.getParameter("factureId"));
-        int articleId = Integer.parseInt(request.getParameter("articleId"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
+     private void deleteFacture(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String id = request.getParameter("numFacture");
+         int Id = Integer.parseInt(id);
+        factureDAO.deleteFacture(Id);
 
-     
-        // Add the facture line to the database
-        factureDAO.addFactureLine(factureId, articleId, quantity);
-
-        // Redirect to the factures page
-        response.sendRedirect(request.getContextPath() + "/factures");
+        response.sendRedirect("factures");
     }
 }

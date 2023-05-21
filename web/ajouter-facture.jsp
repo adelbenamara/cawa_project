@@ -1,18 +1,14 @@
-<%-- 
-    Document   : ajouter-facture
-    Created on : May 19, 2023, 11:16:06 PM
-    Author     : adel
---%>
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Ajouter une facture</title>
     <style>
+        
+         h5{    text-align: center}
         form {
             width: 600px;
             margin: 0 auto;
@@ -70,38 +66,44 @@
         tr:hover {
             background-color: #f5f5f5;
         }
+        .custom-select {
+          width: 100%;
+            border: 1px solid #ccc;
+               border-radius: 5px;
+           background-color: #f9f9f9;
+                font-size: 16px;
+              color: #555;
+                     }
 
-        .delete-button {
-            background-color: #f44336;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+.custom-select option {
+    padding: 10px;
+}  
     </style>
 </head>
 <body>
     <jsp:include page="accueil.jsp" />
 
-    <h3>Ajouter une facture</h3>
+    <h5>Ajouter une facture</h5>
 
-    <c:if test="${factureAdded}">
-        <p style="color: #45a049">La facture a été ajoutée avec succès.</p>
-      </c:if>  
-        
-        <form method="post" action="ajouter-ligne-facture">
-            <input type="hidden" name="factureId" value="${factureId}" />
-            <label for="articleId">ID Article:</label>
-            <input type="text" id="articleId" name="articleId" required><br><br>
-            <label for="quantity">Quantité:</label>
-            <input type="number" id="quantity" name="quantity" required><br><br>
-            <label for="lineTotal">Total ligne:</label>
-            <input type="text" id="lineTotal" name="lineTotal" required><br><br>
-            <input type="submit" value="Ajouter ligne">
-        </form>
+    <form method="post" action="ajouter-facture">
+        <label for="clientId">Client :</label>
+      
+           <select id="clientId" name="clientId" required class="custom-select">
+    <c:choose>
+        <c:when test="${not empty clients}">
+            <option value="">Sélectionner un client</option>
+            <c:forEach var="client" items="${clients}">
+                <option value="${client.id}">${client.nom}</option>
+            </c:forEach>
+        </c:when>
+        <c:otherwise>
+            <option value="">Aucun client disponible</option>
+        </c:otherwise>
+    </c:choose>
+               </select><br><br>
+        <label for="modePaiement">Mode Paiement:</label>
+        <input type="text" id="modePaiement" name="modePaiement" required><br><br>
+        <input type="submit" value="Ajouter">
+    </form>  
 </body>
 </html>
-
-
-
