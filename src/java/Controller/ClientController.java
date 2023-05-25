@@ -16,19 +16,24 @@ import Model.Client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 public class ClientController extends HttpServlet {
     private ClientDAO clientDAO;
 
     public void init() {
-        // Initialiser le DAO du client
-        clientDAO = new ClientDAO();
+        try {
+           
+            clientDAO = new ClientDAO();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClientController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             String action = request.getServletPath();
-            
+             
             switch (action) {
                 case "/clients":
                     getAllClients(request, response);
@@ -68,8 +73,9 @@ public class ClientController extends HttpServlet {
 
     private void getAllClients(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
+        HttpSession session = request.getSession(false);
         List<Client> clients = clientDAO.getAllClients();
-        request.setAttribute("clients", clients);
+        session.setAttribute("clients", clients);
         request.getRequestDispatcher("clients.jsp").forward(request, response);
     }
 

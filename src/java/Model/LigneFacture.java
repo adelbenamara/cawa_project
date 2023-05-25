@@ -1,50 +1,57 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Model;
 
-/**
- *
- * @author adel
- */
 public class LigneFacture {
-    private Article article;
-    private int quantiteVendue;
-    private double prixVente;
+    private int numFacture;
+    private int articleRef;
+    private int quantity;
+    private double totalPrice;
 
-    public LigneFacture(Article article, int quantiteVendue, double prixVente) {
-        this.article = article;
-        this.quantiteVendue = quantiteVendue;
-        this.prixVente = prixVente;
+
+ public LigneFacture(int numFacture, int articleRef, int quantity, double totalPrice) {
+    this.numFacture = numFacture;
+    this.articleRef = articleRef;
+    this.quantity = quantity;
+    this.totalPrice = totalPrice;
+}
+
+public LigneFacture(int articleRef, int quantity, double totalPrice) {
+    this.articleRef = articleRef;
+    this.quantity = quantity;
+    this.totalPrice = totalPrice;
+}
+
+public double getTotalPrice() {
+    return totalPrice;
+}
+
+public void setTotalPrice(double totalPrice) {
+    this.totalPrice = totalPrice;
+}
+
+
+    public int getNumFacture() {
+        return numFacture;
     }
 
-    public Article getArticle() {
-        return article;
+    public void setNumFacture(int numFacture) {
+        this.numFacture = numFacture;
     }
 
-    public void setArticle(Article article) {
-        this.article = article;
+    public int getArticleRef() {
+        return articleRef;
     }
 
-    public int getQuantiteVendue() {
-        return quantiteVendue;
+    public void setArticleRef(int articleRef) {
+        this.articleRef = articleRef;
     }
 
-    public void setQuantiteVendue(int quantiteVendue) {
-        this.quantiteVendue = quantiteVendue;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public double getPrixVente() {
-        return prixVente;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public void setPrixVente(double prixVente) {
-        this.prixVente = prixVente;
-    }
-
-    public double getMontantTotal() {
-        return quantiteVendue * prixVente;
-    }
+ 
 }

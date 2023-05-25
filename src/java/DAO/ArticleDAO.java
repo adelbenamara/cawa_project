@@ -1,18 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package DAO;
-
-/**
- *
- * @author adel
- */
 
 import Model.Article;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +15,11 @@ public class ArticleDAO {
         List<Article> articles = new ArrayList<>();
 
         try (Connection connection = ConnectionFactory.getConnection();
-             Statement statement = connection.createStatement()) {
-
-            String query = "SELECT * FROM articles";
-            ResultSet resultSet = statement.executeQuery(query);
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM articles");
+             ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-              int id = resultSet.getInt("id");
+                int id = resultSet.getInt("id");
                 String designation = resultSet.getString("designation");
                 double price = resultSet.getDouble("prix");
                 int stockQuantity = resultSet.getInt("quantite_stock");
@@ -38,7 +29,7 @@ public class ArticleDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("erour ta3 afichage  :"+e.getMessage());
+            System.out.println("Erreur lors de la récupération des articles : " + e.getMessage());
         }
 
         return articles;
@@ -46,29 +37,55 @@ public class ArticleDAO {
 
     public void addArticle(Article article) throws SQLException, ClassNotFoundException {
         try (Connection connection = ConnectionFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO articles (designation, prix, quantite_stock) VALUES (?, ?, ?)")) {
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO articles (designation, prix, quantite_stock) VALUES (?, ?, ?)")) {
 
-            preparedStatement.setString(1, article.getDesignation());
-            preparedStatement.setDouble(2, article.getPrice());
-            preparedStatement.setInt(3, article.getStockQuantity());
+            statement.setString(1, article.getDesignation());
+            statement.setDouble(2, article.getPrice());
+            statement.setInt(3, article.getStockQuantity());
 
-            preparedStatement.executeUpdate();
+            statement.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println("erour create article  :"+e.getMessage());
+            System.out.println("Erreur lors de l'ajout de l'article : " + e.getMessage());
         }
     }
 
     public void deleteArticle(int articleId) throws SQLException, ClassNotFoundException {
         try (Connection connection = ConnectionFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM articles WHERE id = ?")) {
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM articles WHERE id = ?")) {
 
-            preparedStatement.setInt(1, articleId);
+            statement.setInt(1, articleId);
 
-            preparedStatement.executeUpdate();
+            statement.executeUpdate();
 
         } catch (SQLException e) {
-           System.out.println("erour :"+e.getMessage());
+            System.out.println("Erreur lors de la suppression de l'article : " + e.getMessage());
         }
+    }
+
+    public Article getArticleById(int articleId) throws SQLException, ClassNotFoundException {
+        Article article = null;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM articles WHERE id = ?")) {
+
+            statement.setInt(1, articleId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String designation = resultSet.getString("designation");
+                    double price = resultSet.getDouble("prix");
+                    int stockQuantity = resultSet.getInt("quantite_stock");
+
+                    article = new Article(id, designation, price, stockQuantity);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'article : " + e.getMessage());
+        }
+
+        return article;
     }
 }

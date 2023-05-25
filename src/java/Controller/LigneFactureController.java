@@ -5,6 +5,7 @@
  */
 package Controller;
 import DAO.LineFactureDAO;
+import Model.Facture;
 import Model.LigneFacture;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,8 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpSession;
 
 public class LigneFactureController extends HttpServlet {
+
     private LineFactureDAO lineFactureDAO;
     
     @Override
@@ -31,25 +34,10 @@ public class LigneFactureController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getServletPath();
+        
 
-        if (action != null && action.equals("/ajouter-ligne-facture")) {
-            addLineFacture(request, response);
-        }
+       
     }
 
-    private void addLineFacture(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int numFacture = Integer.parseInt(request.getParameter("numFacture"));
-        String articleRef = request.getParameter("articleRef");
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
-        double price = Double.parseDouble(request.getParameter("price"));
 
-        // Create a new LineFacture object
-        LigneFacture lineFacture = new LigneFacture(numFacture, articleRef, quantity, price);
-
-        // Add the line of the facture to the database
-        lineFactureDAO.addLineFacture(lineFacture);
-
-        // Redirect to a confirmation page or any other desired destination
-        response.sendRedirect("confirmation.jsp");
-    }
 }

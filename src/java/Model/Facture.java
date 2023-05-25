@@ -5,10 +5,6 @@
  */
 package Model;
 
-/**
- *
- * @author adel
- */
 import java.util.Date;
 import java.util.List;
 
@@ -18,24 +14,19 @@ public class Facture {
     private float totalHT;
     private float totalTTC;
     private String modePaiement;
-    private int  idClient;
+    private int idClient;
     private List<LigneFacture> ligneFactureList;
 
-    
-       public Facture( String modePaiement,int  id_client) {
+    public Facture(String modePaiement, int idClient) {
         this.modePaiement = modePaiement;
-        this.idClient= id_client;
-       
+        this.idClient = idClient;
     }
-       
-   
-    
-    
-    public Facture(int id, Date dateFacture, String modePaiement, int id_client) {
-        this.numFacture = id;
+
+    public Facture(int numFacture, Date dateFacture, String modePaiement, int idClient) {
+        this.numFacture = numFacture;
         this.dateFacture = dateFacture;
         this.modePaiement = modePaiement;
-        this.idClient= id_client;
+        this.idClient = idClient;
     }
 
     public int getNumFacture() {
@@ -82,8 +73,8 @@ public class Facture {
         return idClient;
     }
 
-    public void setIdClient(int client) {
-        this.idClient = client;
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
     }
 
     public List<LigneFacture> getLigneFactureList() {

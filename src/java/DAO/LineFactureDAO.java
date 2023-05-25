@@ -26,12 +26,12 @@ public class LineFactureDAO {
 
     public void addLineFacture(LigneFacture ligneFacture) {
         try {
-            String query = "INSERT INTO line_facture (num_facture, article_ref, quantity, price) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO line_facture (num_facture, article_ref, quantity) VALUES (?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, ligneFacture.getNumFacture());
-                statement.setString(2, ligneFacture.getArticleRef());
+                statement.setInt(2, ligneFacture.getArticleRef());
                 statement.setInt(3, ligneFacture.getQuantity());
-                statement.setDouble(4, ligneFacture.getPrice());
+               
                 
                 statement.executeUpdate();
             }

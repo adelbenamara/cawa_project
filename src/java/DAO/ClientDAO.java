@@ -19,15 +19,25 @@ import java.util.List;
 import Model.Client;
 
 public class ClientDAO {
+      private Connection connection;
+
+      public ClientDAO() throws ClassNotFoundException {
+        try {
+            connection = ConnectionFactory.getConnection();
+        } catch (SQLException e) {
+           System.out.println(" erour :"+e.getMessage());
+        }
+    }
     
-    public List<Client> getAllClients() throws ClassNotFoundException {
+    
+    
+    
+    public List<Client> getAllClients()   {
         List<Client> clients = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
 
         try {
-            connection = ConnectionFactory.getConnection();
             String query = "SELECT * FROM clients";
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
@@ -43,28 +53,28 @@ public class ClientDAO {
             }
         } catch (SQLException e) {
            System.out.println(" erour :"+e.getMessage());
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                   System.out.println(" erour :"+e.getMessage());
-                }
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                  System.out.println(" erour :"+e.getMessage());
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                  System.out.println(" erour :"+e.getMessage());
-                }
-            }
+//        } finally {
+//            if (resultSet != null) {
+//                try {
+//                    resultSet.close();
+//                } catch (SQLException e) {
+//                   System.out.println(" erour :"+e.getMessage());
+//                }
+//            }
+//            if (statement != null) {
+//                try {
+//                    statement.close();
+//                } catch (SQLException e) {
+//                  System.out.println(" erour :"+e.getMessage());
+//                }
+//            }
+//            if (connection != null) {
+//                try {
+//                    connection.close();
+//                } catch (SQLException e) {
+//                  System.out.println(" erour :"+e.getMessage());
+//                }
+//            }
         }
 
         return clients;

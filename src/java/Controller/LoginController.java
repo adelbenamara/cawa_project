@@ -3,6 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Controller;
 
 import java.io.IOException;
@@ -18,13 +23,25 @@ import javax.servlet.http.HttpSession;
  *
  * @author adel
  */
-@WebServlet("/login")
+
 public class LoginController extends HttpServlet {
 
  @Override
 protected void doGet(HttpServletRequest request, HttpServletResponse response)
   throws ServletException, IOException {
+    String action = request.getServletPath();
+     
+        if (action.equals("/logout")) {
+            // Logout the user by invalidating the session
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            // Redirect the user to the login page
+            response.sendRedirect(request.getContextPath()+"/login");
+        } else {
   request.getRequestDispatcher("login.jsp").forward(request, response);
+        }
 }
 
 @Override

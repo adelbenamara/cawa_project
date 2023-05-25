@@ -42,35 +42,54 @@
             border-radius: 4px;
             cursor: pointer;
         }
+        .view-button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <jsp:include page="accueil.jsp" />
     <h4>Liste des Factures :</h4>
-
     <c:if test="${not empty factures}">
        
         <table>
             <tr>
                 <th>num Facture</th>
-                <th>id client</th>
+                <th>client</th>
                 <th>mode Paiement</th>
                 <th>date Facture</th>
+                <th>Action</th>
                 <th>Action</th>
             </tr>
 
             <c:forEach var="facture" items="${factures}">
                 <tr>
                     <td>${facture.numFacture}</td>
-                    <td>${facture.idClient}</td>
+               <c:if test="${not empty clients}">
+                    <c:forEach var="client" items="${clients}">
+                      <c:if test="${client.id eq facture.idClient}">
+                               <td>${client.nom}</td>
+                                </c:if>
+                        </c:forEach>
+                          </c:if>     
                     <td>${facture.modePaiement}</td>
                     <td>${facture.dateFacture}</td>
-                   
                     <td>
                         <form method="post" action="supprimer-facture" >
                             <input type="hidden" name="numFacture" value="${facture.numFacture}" />
                             <input type="submit" value="Supprimer" class="delete-button" />
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" action="details-facture">
+                            <input type="hidden" name="numFacture" value="${facture.numFacture}" />
+                            <input type="submit" value="Voir les détails" class="view-button" />
                         </form>
                     </td>
                 </tr>
