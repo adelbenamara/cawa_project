@@ -81,8 +81,6 @@
     </servlet-mapping>
     
     
-    
-    
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/</url-pattern>

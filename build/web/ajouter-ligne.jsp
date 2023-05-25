@@ -11,107 +11,100 @@
 <head>
     <meta charset="UTF-8">
     <title>Ajouter une ligne de facture</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
 
-        h2 {
-            text-align: center;
-        }
+    h2 {
+        text-align: center;
+    }
 
-        form {
-            width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
+    form {
+        width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
 
-        input[type="text"],
-        input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+    input[type="text"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        color: #555;
+    }
 
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            color: #555;
-        }
+    input[type="submit"].add-button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-        input[type="submit"] {
-            background-color: #4caf50;
-            width: 100%;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    input[type="submit"].add-button:hover {
+        background-color: #45a049;
+    }
 
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+    th,
+    td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
 
-        th,
-        td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+    th {
+        background-color: #f2f2f2;
+    }
 
-        th {
-            background-color: #f2f2f2;
-        }
+    input[type="submit"].delete-button {
+        background-color: #ff5c5c;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
 
-        .delete-button {
-            background-color: #ff5c5c;
-            color: white;
-            padding: 6px 12px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
+    input[type="submit"].delete-button:hover {
+        background-color: #e63f3f;
+    }
 
-        .delete-button:hover {
-            background-color: #e63f3f;
-        }
+    input[type="submit"].finish-button {
+        float: right;
+        background-color: #2196f3;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-        .finish-button {
-            float: right;
-            background-color: #2196f3;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    input[type="submit"].finish-button:hover {
+        background-color: #0c7cd5;
+    }
+</style>
 
-        .finish-button:hover {
-            background-color: #0c7cd5;
-        }
-    </style>
 </head>
 
 <body>
@@ -132,6 +125,9 @@
         </div>
     </c:if>
     <h2>Ajouter une ligne de facture</h2>
+    <c:if test="${not empty error}">
+        <p style="color: red;">${error}</p>
+    </c:if>
     <form method="post" action="ajouter-line">
         <c:if test="${not empty ligneFactureList}">
             <input type="hidden" value="${ligneFactureList}" name="ligneFactureList">

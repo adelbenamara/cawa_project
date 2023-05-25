@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Facture {
+    public static float TVA = 0.02f ;
     private int numFacture;
     private Date dateFacture;
     private float totalHT;
@@ -84,4 +85,16 @@ public class Facture {
     public void setLigneFactureList(List<LigneFacture> ligneFactureList) {
         this.ligneFactureList = ligneFactureList;
     }
+    public void calculateTotalHT() {
+        float total = 0.0f;
+        for (LigneFacture ligneFacture : ligneFactureList) {
+            total += ligneFacture.getTotalPrice();
+        }
+        this.totalHT = total;
+    }
+    
+    public void calculateTotalTTC(float tauxTVA) {
+        this.totalTTC = totalHT * (1 + tauxTVA);
+    }
+
 }

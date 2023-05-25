@@ -80,12 +80,12 @@ public class ClientDAO {
         return clients;
     }
 
-    public void addClient(Client client) throws ClassNotFoundException {
-        Connection connection = null;
+    public void addClient(Client client)  {
+       
         PreparedStatement statement = null;
 
         try {
-            connection = ConnectionFactory.getConnection();
+          
             String query = "INSERT INTO clients (nom,  telephone,email) VALUES (?, ?, ?)";
             statement = connection.prepareStatement(query);
             statement.setString(1, client.getNom());
@@ -112,12 +112,12 @@ public class ClientDAO {
         }
     }
 
-    public void deleteClient(String clientId) throws ClassNotFoundException {
-        Connection connection = null;
+    public void deleteClient(String clientId)  {
+       
         PreparedStatement statement = null;
 
         try {
-            connection = ConnectionFactory.getConnection();
+           
            int Id = Integer.parseInt(clientId);
             String query = "DELETE FROM clients WHERE id = ?";
             statement = connection.prepareStatement(query);

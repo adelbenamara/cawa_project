@@ -4,7 +4,6 @@ import DAO.ArticleDAO;
 import Model.Article;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,37 +14,42 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ArticleController extends HttpServlet {
-
+    
     private ArticleDAO articleDAO;
 
     @Override
     public void init() throws ServletException {
-        super.init();
-        articleDAO = new ArticleDAO();
+        try {
+            super.init();
+            articleDAO = new ArticleDAO();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ArticleController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
        
+        String action = req.getServletPath();
+        switch (action) {
+            case "/articles":
+                List<Article> articles = null;
         try {
-            String action = req.getServletPath();
-            
-            switch (action) {
-                case "/articles":
-                    List<Article> articles = articleDAO.getAllArticles();
-                    req.setAttribute("articles", articles);
-                    req.getRequestDispatcher("articles.jsp").forward(req, resp);
-                    break;
-                case "/ajouter-article":
-                    req.getRequestDispatcher("ajouter-article.jsp").forward(req, resp);
-                    break;
-                default:
-                    resp.sendRedirect("accueil.jsp");
-                    break;
-                    
-                    
-            }   } catch (SQLException | ClassNotFoundException ex) {
+            articles = articleDAO.getAllArticles();
+        } catch (SQLException ex) {
             Logger.getLogger(ArticleController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                req.setAttribute("articles", articles);
+                req.getRequestDispatcher("articles.jsp").forward(req, resp);
+                break;
+            case "/ajouter-article":
+                req.getRequestDispatcher("ajouter-article.jsp").forward(req, resp);
+                break;
+            default:
+                resp.sendRedirect("accueil.jsp");
+                break;
+                
+                
         }
     }
     @Override
@@ -67,21 +71,31 @@ public class ArticleController extends HttpServlet {
         
     }
 
-    private void addArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException, ClassNotFoundException {
-        // Récupérer les données du formulaire
-        String designation = req.getParameter("designation");
-        double price = Double.parseDouble(req.getParameter("price"));
-        int stockQuantity = Integer.parseInt(req.getParameter("stockQuantity"));
+private void addArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException, ClassNotFoundException {
+    // Récupérer les données du formulaire
+    String designation = req.getParameter("designation");
+    double price = Double.parseDouble(req.getParameter("price"));
+    int stockQuantity = Integer.parseInt(req.getParameter("stockQuantity"));
 
+    // Vérifier si l'article existe déjà dans la base de données
+    Article existingArticle = articleDAO.getArticleByDesignation(designation);
+    if (existingArticle != null) {
+        // L'article existe déjà, augmenter la quantité
+        existingArticle.setStockQuantity(existingArticle.getStockQuantity() + stockQuantity);
+        existingArticle.setPrice(price);
+        articleDAO.updateArticle(existingArticle);
+    } else {
         // Créer un nouvel objet Article
         Article article = new Article(designation, price, stockQuantity);
 
         // Ajouter l'article à la base de données
         articleDAO.addArticle(article);
-
-        // Rediriger vers la page des articles
-        resp.sendRedirect(req.getContextPath() + "/articles");
     }
+
+    // Rediriger vers la page des articles
+    resp.sendRedirect(req.getContextPath() + "/articles");
+}
+
 
     private void deleteArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
@@ -93,7 +107,7 @@ public class ArticleController extends HttpServlet {
             
             // Rediriger vers la page des articles
             resp.sendRedirect(req.getContextPath() + "/articles");
-        } catch (SQLException | ClassNotFoundException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(ArticleController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

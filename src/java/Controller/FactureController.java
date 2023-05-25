@@ -36,7 +36,7 @@ public class FactureController extends HttpServlet {
             factureDAO = new FactureDAO();
             articleDAO = new ArticleDAO();
             clientDAO = new ClientDAO();
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(FactureController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -91,12 +91,40 @@ public class FactureController extends HttpServlet {
                     finishFacture(request, response);
                     
                     break;    
+                case "/details-facture":
+                  showFactureDetails(request, response);
+                 break;
+
             }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(FactureController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    
+    private void showFactureDetails(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+     HttpSession session = request.getSession(false);
+        String numFacture = request.getParameter("numFacture");
+    int idFacture = Integer.parseInt(numFacture);
+    Facture facture = factureDAO.getFactureByNumFacture(idFacture);
+    facture.calculateTotalHT();
+    facture.calculateTotalTTC(Facture.TVA);
+   List<Article> articles = new ArrayList<>();
+        try {
+            articles = articleDAO.getAllArticles();
+        } catch (SQLException ex) {
+            Logger.getLogger(FactureController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   List<LigneFacture> ligneFactureList = facture.getLigneFactureList();
+   List<Client> clients =  clientDAO.getAllClients();
+    session.setAttribute("facture", facture);
+    session.setAttribute("clients", clients);
+    request.setAttribute("ligneFactureList", ligneFactureList);
+    request.setAttribute("articles", articles);
+    request.getRequestDispatcher("facture-details.jsp").forward(request, response);
+}
+
+    
    private void addLine(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ClassNotFoundException {
     String modePaiement = request.getParameter("modePaiement");
     int clientId = Integer.parseInt(request.getParameter("clientId"));
@@ -109,43 +137,62 @@ public class FactureController extends HttpServlet {
     List<Article> articles = articleDAO.getAllArticles();
     List<Client> clients = clientDAO.getAllClients();
      session.setAttribute("facture", facture); 
-    request.setAttribute("articles", articles);
+    session.setAttribute("articles", articles);
      session.setAttribute("clients", clients);
     request.getRequestDispatcher("ajouter-ligne.jsp").forward(request, response);
 }
-    
+   
 private void addLineFacture(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    try {
-         String articleRef = request.getParameter("article");
-        String quantiteVendue = request.getParameter("quantiteVendue");
-        int articleid = Integer.parseInt(articleRef);
-        int quantity = Integer.parseInt(quantiteVendue);
-        
-        // Obtenez le prix de l'article à partir de votre source de données (base de données, etc.)
-        Article article = articleDAO.getArticleById(articleid);
-        double totalPrice = article.getPrice() * quantity;
+    String articleRef = request.getParameter("article");
+    String quantiteVendue = request.getParameter("quantiteVendue");
 
-        LigneFacture line = new LigneFacture(articleid, quantity, totalPrice);
-        
-        
-        HttpSession session = request.getSession();
-        ArrayList<LigneFacture> ligneFactureList = (ArrayList<LigneFacture>) session.getAttribute("ligneFactureList");
-        if (ligneFactureList == null) {
-            ligneFactureList = new ArrayList<>();
-            session.setAttribute("ligneFactureList", ligneFactureList); // Sauvegarder la liste dans la session
+    if (articleRef != null && !articleRef.isEmpty() && quantiteVendue != null && !quantiteVendue.isEmpty()) {
+        try {
+            int articleId = Integer.parseInt(articleRef);
+            int quantity = Integer.parseInt(quantiteVendue);
+
+            // Obtain the article from your data source (database, etc.)
+            Article article = articleDAO.getArticleById(articleId);
+
+            // Check if the article exists and the quantities are valid
+            if (article != null && quantity > 0 && quantity <= article.getStockQuantity()) {
+                double totalPrice = article.getPrice() * quantity;
+
+                LigneFacture line = new LigneFacture(articleId, quantity, totalPrice);
+
+                HttpSession session = request.getSession();
+                ArrayList<LigneFacture> ligneFactureList = (ArrayList<LigneFacture>) session.getAttribute("ligneFactureList");
+                if (ligneFactureList == null) {
+                    ligneFactureList = new ArrayList<>();
+                    session.setAttribute("ligneFactureList", ligneFactureList); // Save the list in the session
+                }
+
+                ligneFactureList.add(line);
+                session.setAttribute("ligneFactureList", ligneFactureList);
+
+                List<Article> articles = articleDAO.getAllArticles();
+                session.setAttribute("articles", articles);
+
+                request.getRequestDispatcher("ajouter-ligne.jsp").forward(request, response);
+            } else {
+                // Handle the case when the article or the quantities are invalid
+                // Redirect or display an error message to the user
+                // For example:
+                request.setAttribute("error", "Invalid article or quantity");
+                request.getRequestDispatcher("ajouter-ligne.jsp").forward(request, response);
+            }
+        } catch (NumberFormatException | SQLException ex) {
+            Logger.getLogger(FactureController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        ligneFactureList.add(line);
-        session.setAttribute("ligneFactureList", ligneFactureList);
-        
-        List<Article> articles = articleDAO.getAllArticles();
-        session.setAttribute("articles", articles);
-        
+    } else {
+        // Handle the case when articleRef or quantiteVendue is missing
+        // Redirect or display an error message to the user
+        // For example:
+        request.setAttribute("error", "Invalid article or quantity");
         request.getRequestDispatcher("ajouter-ligne.jsp").forward(request, response);
-    } catch (SQLException | ClassNotFoundException ex) {
-        Logger.getLogger(FactureController.class.getName()).log(Level.SEVERE, null, ex);
     }
 }
+
 
     
     
@@ -156,10 +203,6 @@ private void addLineFacture(HttpServletRequest request, HttpServletResponse resp
      facture.setLigneFactureList(ligneFactureList);
     // Insert the facture and line items into the database
     factureDAO.insertFacture(facture);
-
-    // Clear the session
-   // request.getSession().invalidate();
-
     // Redirect to the desired page
     response.sendRedirect(request.getContextPath() + "/factures");
 }

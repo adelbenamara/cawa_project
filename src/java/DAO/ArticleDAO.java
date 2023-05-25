@@ -10,11 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleDAO {
+     Connection connection =null;
+     public ArticleDAO() throws ClassNotFoundException ,java.sql.SQLException {
+        try {
+           connection = ConnectionFactory.getConnection();
+        } catch (SQLException e) {
+           System.out.println(" erour :"+e.getMessage());
+        }
+    }
 
-    public List<Article> getAllArticles() throws SQLException, ClassNotFoundException {
+     
+    public List<Article> getAllArticles() throws SQLException {
         List<Article> articles = new ArrayList<>();
 
-        try (Connection connection = ConnectionFactory.getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM articles");
              ResultSet resultSet = statement.executeQuery()) {
 
@@ -35,8 +44,8 @@ public class ArticleDAO {
         return articles;
     }
 
-    public void addArticle(Article article) throws SQLException, ClassNotFoundException {
-        try (Connection connection = ConnectionFactory.getConnection();
+    public void addArticle(Article article) throws SQLException {
+        try (
              PreparedStatement statement = connection.prepareStatement("INSERT INTO articles (designation, prix, quantite_stock) VALUES (?, ?, ?)")) {
 
             statement.setString(1, article.getDesignation());
@@ -50,8 +59,8 @@ public class ArticleDAO {
         }
     }
 
-    public void deleteArticle(int articleId) throws SQLException, ClassNotFoundException {
-        try (Connection connection = ConnectionFactory.getConnection();
+    public void deleteArticle(int articleId) throws SQLException {
+        try ( 
              PreparedStatement statement = connection.prepareStatement("DELETE FROM articles WHERE id = ?")) {
 
             statement.setInt(1, articleId);
@@ -62,11 +71,37 @@ public class ArticleDAO {
             System.out.println("Erreur lors de la suppression de l'article : " + e.getMessage());
         }
     }
+    
+    public Article getArticleByDesignation(String designation) throws SQLException {
+    Article article = null;
 
-    public Article getArticleById(int articleId) throws SQLException, ClassNotFoundException {
+    try (
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM articles WHERE designation = ?")) {
+
+        statement.setString(1, designation);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                double price = resultSet.getDouble("prix");
+                int stockQuantity = resultSet.getInt("quantite_stock");
+
+                article = new Article(id, designation, price, stockQuantity);
+            }
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Erreur lors de la récupération de l'article par désignation : " + e.getMessage());
+    }
+
+    return article;
+}
+
+
+    public Article getArticleById(int articleId) throws SQLException{
         Article article = null;
 
-        try (Connection connection = ConnectionFactory.getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM articles WHERE id = ?")) {
 
             statement.setInt(1, articleId);
@@ -88,4 +123,20 @@ public class ArticleDAO {
 
         return article;
     }
+    public void updateArticle(Article article) throws SQLException {
+    try (
+        PreparedStatement statement = connection.prepareStatement("UPDATE articles SET designation = ?, prix = ?, quantite_stock = ? WHERE id = ?")) {
+
+        statement.setString(1, article.getDesignation());
+        statement.setDouble(2, article.getPrice());
+        statement.setInt(3, article.getStockQuantity());
+        statement.setInt(4, article.getId());
+
+        statement.executeUpdate();
+
+    } catch (SQLException e) {
+        System.out.println("Erreur lors de la mise à jour de l'article : " + e.getMessage());
+    }
+}
+
 }
