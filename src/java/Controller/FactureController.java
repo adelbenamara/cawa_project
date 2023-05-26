@@ -119,8 +119,8 @@ public class FactureController extends HttpServlet {
    List<Client> clients =  clientDAO.getAllClients();
     session.setAttribute("facture", facture);
     session.setAttribute("clients", clients);
-    request.setAttribute("ligneFactureList", ligneFactureList);
-    request.setAttribute("articles", articles);
+    session.setAttribute("ligneFactureList", ligneFactureList);
+    session.setAttribute("articles", articles);
     request.getRequestDispatcher("facture-details.jsp").forward(request, response);
 }
 

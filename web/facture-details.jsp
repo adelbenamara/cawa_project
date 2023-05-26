@@ -17,7 +17,10 @@
         h1 {
             color: #333;
         }
-        
+        .pdf{
+            
+            float: right;
+        }
         table {
             border-collapse: collapse;
             width: 100%;
@@ -111,5 +114,13 @@
     <h4>Total</h4>
     <p>Total HT: ${facture.totalHT}</p>
     <p>Total TTC: ${facture.totalTTC}</p>
+    <c:if test="${not empty ligneFactureList }">
+         <c:if test="${not empty facture }">
+      <form class="pdf" action="generate-pdf" method="post">
+         <input type="hidden" name="facture" value="${facture}">
+         <input type="hidden" name="ligneFactureList" value="${ligneFactureList}">
+        <input type="submit" value="Print PDF">
+    </form>
+   </c:if> </c:if>
 </body>
 </html>

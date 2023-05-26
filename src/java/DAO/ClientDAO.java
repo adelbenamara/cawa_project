@@ -30,7 +30,32 @@ public class ClientDAO {
     }
     
     
-    
+    public Client getClientByID(int id) {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Client client = null;
+
+        try {
+            String query = "SELECT * FROM clients WHERE id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String nom = resultSet.getString("nom");
+                String telephone = resultSet.getString("telephone");
+                String email = resultSet.getString("email");
+
+                client = new Client(id, nom, telephone, email);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            // Close the resultSet, statement, and connection (similar to other methods)
+        }
+
+        return client;
+    }
     
     public List<Client> getAllClients()   {
         List<Client> clients = new ArrayList<>();

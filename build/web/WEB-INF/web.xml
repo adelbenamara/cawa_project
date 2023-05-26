@@ -6,9 +6,7 @@
        login.jsp    
     </welcome-file>
     </welcome-file-list>
-    
- <!-- servlet -->
-
+    <!-- servlet -->
     <servlet>
         <servlet-name>ClientController</servlet-name>
         <servlet-class>Controller.ClientController</servlet-class>
@@ -29,14 +27,14 @@
         <servlet-name>HomeController</servlet-name>
         <servlet-class>Controller.HomeController</servlet-class>
     </servlet>
- <!-- Add the filter configuration -->
+    <!-- Add the filter configuration -->
     <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>Controller.AuthenticationFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
-         <url-pattern>/ajouter-client</url-pattern>
+        <url-pattern>/ajouter-client</url-pattern>
         <url-pattern>/supprimer-client</url-pattern>
         <url-pattern>/clients</url-pattern>
         <url-pattern>/home</url-pattern>
@@ -46,22 +44,29 @@
         <url-pattern>/supprimer-facture</url-pattern>
         <url-pattern>/factures</url-pattern>
         <url-pattern>/supprimer-line</url-pattern>
-         <url-pattern>/envoyer-facture</url-pattern>
-         <url-pattern>/details-facture</url-pattern>
-          <url-pattern>/ajouter-article</url-pattern>
+        <url-pattern>/envoyer-facture</url-pattern>
+        <url-pattern>/details-facture</url-pattern>
+        <url-pattern>/ajouter-article</url-pattern>
         <url-pattern>/supprimer-article</url-pattern>
         <url-pattern>/articles</url-pattern>
+        <url-pattern>/generate-pdf</url-pattern>
+        <url-pattern>/</url-pattern>
     </filter-mapping>
-  <!-- Add the filter configuration -->
-  
-     <!-- Add the servlet-mapping -->
+    <!-- Add the filter configuration -->
+    <!-- Add the servlet-mapping -->
+    <servlet>
+        <servlet-name>GeneratePdfServlet</servlet-name>
+        <servlet-class>Controller.GeneratePdfServlet</servlet-class>
+    </servlet>
+    
+    
+    
     <servlet-mapping>
         <servlet-name>ClientController</servlet-name>
         <url-pattern>/ajouter-client</url-pattern>
         <url-pattern>/supprimer-client</url-pattern>
         <url-pattern>/clients</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>FactureController</servlet-name>
         <url-pattern>/ajouter-line</url-pattern>
@@ -69,30 +74,29 @@
         <url-pattern>/supprimer-facture</url-pattern>
         <url-pattern>/factures</url-pattern>
         <url-pattern>/supprimer-line</url-pattern>
-         <url-pattern>/envoyer-facture</url-pattern>
-         <url-pattern>/details-facture</url-pattern>
+        <url-pattern>/envoyer-facture</url-pattern>
+        <url-pattern>/details-facture</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>ArticleController</servlet-name>
         <url-pattern>/ajouter-article</url-pattern>
         <url-pattern>/supprimer-article</url-pattern>
         <url-pattern>/articles</url-pattern>
     </servlet-mapping>
-    
-    
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/</url-pattern>
         <url-pattern>/Login</url-pattern>
         <url-pattern>/Logout</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
         <url-pattern>/home</url-pattern>
     </servlet-mapping>
-    
+    <servlet-mapping>
+        <servlet-name>GeneratePdfServlet</servlet-name>
+        <url-pattern>/generate-pdf</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
