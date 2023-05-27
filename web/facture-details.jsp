@@ -82,7 +82,8 @@
         <table>
             <thead>
                 <tr>
-                    <th>Article</th>
+                    <th>Référence article</th>
+                    <th>designation Article</th>
                     <th>Prix unitaire </th>
                     <th>Quantité vendue</th>
                     <th>Total Price</th>
@@ -95,7 +96,8 @@
                         
                             <c:if test="${not empty articles }">
                             <c:forEach items="${articles}" var="article">
-                                <c:if test="${article.id eq ligneFacture.articleRef}">
+                                <c:if test="${ article.ref_article eq ligneFacture.articleRef}">
+                                  <td>  ${article.ref_article}  </td>
                                   <td>  ${article.designation}  </td>
                                   <td>  ${article.price}  </td>
                                 </c:if>

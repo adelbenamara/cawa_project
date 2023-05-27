@@ -136,7 +136,7 @@
             <label for="article">Article :</label>
             <select id="article" name="article" required>
                 <c:forEach items="${articles}" var="article">
-                    <option value="${article.id}">${article.designation}</option>
+                    <option value="${article.ref_article}">${article.designation}</option>
                 </c:forEach>
             </select>
         </c:if>
@@ -161,7 +161,7 @@
                     <tr>
                         <td>
                             <c:forEach items="${articles}" var="article">
-                                <c:if test="${article.id eq ligneFacture.articleRef}">
+                                <c:if test="${article.ref_article eq ligneFacture.articleRef}">
                                     ${article.designation}
                                 </c:if>
                             </c:forEach>

@@ -78,10 +78,11 @@ public class GeneratePdfServlet extends HttpServlet {
                 ligneFactureHeader.setSpacingAfter(10f);
                 document.add(ligneFactureHeader);
                 // Create a table for ligneFactureList
-                PdfPTable ligneFactureTable = new PdfPTable(4);
+                PdfPTable ligneFactureTable = new PdfPTable(5);
                 ligneFactureTable.setWidthPercentage(100);
-                ligneFactureTable.setWidths(new float[]{2, 1, 1, 1});
-                ligneFactureTable.addCell(new Phrase("Article", tableHeaderFont));
+                ligneFactureTable.setWidths(new float[]{0.8f, 1.7f, 0.5f, 0.5f,0.5f});
+                ligneFactureTable.addCell(new Phrase("Référence article", tableHeaderFont));
+                ligneFactureTable.addCell(new Phrase("Designation Article", tableHeaderFont));
                 ligneFactureTable.addCell(new Phrase("Prix unitaire", tableHeaderFont));
                 ligneFactureTable.addCell(new Phrase("Quantité vendue", tableHeaderFont));
                 ligneFactureTable.addCell(new Phrase("Total Price", tableHeaderFont));
@@ -90,11 +91,11 @@ public class GeneratePdfServlet extends HttpServlet {
                 for (LigneFacture ligneFacture : ligneFactureList) {
                      Article article = null;
                     try {
-                        article = articleDAO.getArticleById(ligneFacture.getArticleRef());
+                        article = articleDAO.getArticleByID(ligneFacture.getArticleRef());
                     } catch (SQLException ex) {
                         Logger.getLogger(GeneratePdfServlet.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    // Add cells to the table with ligneFacture details
+                     ligneFactureTable.addCell(new Phrase( article.getRef_article(), tableCellFont));
                     ligneFactureTable.addCell(new Phrase( article.getDesignation(), tableCellFont)); // Replace with actual article name
                     ligneFactureTable.addCell(new Phrase(String.valueOf( article.getPrice()) ,tableCellFont));
                     ligneFactureTable.addCell(new Phrase(String.valueOf(ligneFacture.getQuantity()), tableCellFont));

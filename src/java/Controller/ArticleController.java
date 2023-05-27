@@ -73,12 +73,13 @@ public class ArticleController extends HttpServlet {
 
 private void addArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException, ClassNotFoundException {
     // Récupérer les données du formulaire
+    String ref_article =  req.getParameter("ref_article");
     String designation = req.getParameter("designation");
     double price = Double.parseDouble(req.getParameter("price"));
     int stockQuantity = Integer.parseInt(req.getParameter("stockQuantity"));
 
     // Vérifier si l'article existe déjà dans la base de données
-    Article existingArticle = articleDAO.getArticleByDesignation(designation);
+    Article existingArticle = articleDAO.getArticleByID(ref_article);
     if (existingArticle != null) {
         // L'article existe déjà, augmenter la quantité
         existingArticle.setStockQuantity(existingArticle.getStockQuantity() + stockQuantity);
@@ -86,7 +87,7 @@ private void addArticle(HttpServletRequest req, HttpServletResponse resp) throws
         articleDAO.updateArticle(existingArticle);
     } else {
         // Créer un nouvel objet Article
-        Article article = new Article(designation, price, stockQuantity);
+        Article article = new Article(ref_article, designation, price, stockQuantity);
 
         // Ajouter l'article à la base de données
         articleDAO.addArticle(article);
@@ -100,7 +101,7 @@ private void addArticle(HttpServletRequest req, HttpServletResponse resp) throws
     private void deleteArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             // Récupérer l'ID de l'article à supprimer
-            int articleId = Integer.parseInt(req.getParameter("articleId"));
+            String articleId =req.getParameter("articleId");
             
             // Supprimer l'article de la base de données
             articleDAO.deleteArticle(articleId);

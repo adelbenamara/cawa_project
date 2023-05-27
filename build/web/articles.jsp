@@ -52,6 +52,7 @@
     <c:if test="${not empty articles}">
         <table>
             <tr>
+                <th>Référence article</th>
                 <th>Désignation</th>
                 <th>Prix</th>
                 <th>Quantité en stock</th>
@@ -60,12 +61,14 @@
 
             <c:forEach var="article" items="${articles}">
                 <tr>
+                    
+                    <td>${article.ref_article}</td>
                     <td>${article.designation}</td>
                     <td>${article.price}</td>
                     <td>${article.stockQuantity}</td>
                     <td>
                         <form method="post" action="supprimer-article">
-                            <input type="hidden" name="articleId" value="${article.id}" />
+                            <input type="hidden" name="articleId" value="${article.ref_article}" />
                             <input type="submit" value="Supprimer" class="delete-button" />
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </form>

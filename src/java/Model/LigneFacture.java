@@ -2,19 +2,19 @@ package Model;
 
 public class LigneFacture {
     private int numFacture;
-    private int articleRef;
+    private String articleRef;
     private int quantity;
     private double totalPrice;
 
 
- public LigneFacture(int numFacture, int articleRef, int quantity, double totalPrice) {
+ public LigneFacture(int numFacture, String articleRef, int quantity, double totalPrice) {
     this.numFacture = numFacture;
     this.articleRef = articleRef;
     this.quantity = quantity;
     this.totalPrice = totalPrice;
 }
 
-public LigneFacture(int articleRef, int quantity, double totalPrice) {
+public LigneFacture(String articleRef, int quantity, double totalPrice) {
     this.articleRef = articleRef;
     this.quantity = quantity;
     this.totalPrice = totalPrice;
@@ -37,11 +37,11 @@ public void setTotalPrice(double totalPrice) {
         this.numFacture = numFacture;
     }
 
-    public int getArticleRef() {
+    public String getArticleRef() {
         return articleRef;
     }
 
-    public void setArticleRef(int articleRef) {
+    public void setArticleRef(String articleRef) {
         this.articleRef = articleRef;
     }
 

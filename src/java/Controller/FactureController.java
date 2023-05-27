@@ -148,18 +148,17 @@ private void addLineFacture(HttpServletRequest request, HttpServletResponse resp
 
     if (articleRef != null && !articleRef.isEmpty() && quantiteVendue != null && !quantiteVendue.isEmpty()) {
         try {
-            int articleId = Integer.parseInt(articleRef);
+            String articleId =articleRef;
             int quantity = Integer.parseInt(quantiteVendue);
 
             // Obtain the article from your data source (database, etc.)
-            Article article = articleDAO.getArticleById(articleId);
+            Article article = articleDAO.getArticleByID(articleId);
 
             // Check if the article exists and the quantities are valid
             if (article != null && quantity > 0 && quantity <= article.getStockQuantity()) {
                 double totalPrice = article.getPrice() * quantity;
 
                 LigneFacture line = new LigneFacture(articleId, quantity, totalPrice);
-
                 HttpSession session = request.getSession();
                 ArrayList<LigneFacture> ligneFactureList = (ArrayList<LigneFacture>) session.getAttribute("ligneFactureList");
                 if (ligneFactureList == null) {

@@ -12,13 +12,15 @@ package Model;
 
 
 public class Article {
-    private int id;
+
+  
+    private String  ref_article;
     private String designation;
     private double price;
     private int stockQuantity;
 
-    public Article(int id, String designation, double price, int stockQuantity) {
-        this.id = id;
+    public Article(String  ref_article, String designation, double price, int stockQuantity) {
+        this.ref_article=ref_article;
         this.designation = designation;
         this.price = price;
         this.stockQuantity = stockQuantity;
@@ -30,14 +32,6 @@ public class Article {
     }
 
     // Getters and Setters
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getDesignation() {
         return designation;
@@ -61,5 +55,12 @@ public class Article {
 
     public void setStockQuantity(int stockQuantity) {
         this.stockQuantity = stockQuantity;
+    }
+      public String getRef_article() {
+        return ref_article;
+    }
+
+    public void setRef_article(String ref_article) {
+        this.ref_article = ref_article;
     }
 }

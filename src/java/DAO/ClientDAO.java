@@ -119,22 +119,7 @@ public class ClientDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
              System.out.println(" erour :"+e.getMessage());
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                     System.out.println(" erour :"+e.getMessage());
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    System.out.println(" erour :"+e.getMessage());
-                }
-            }
-        }
+        } 
     }
 
     public void deleteClient(String clientId)  {
@@ -150,21 +135,7 @@ public class ClientDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
            System.out.println(" erour :"+e.getMessage());
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                   System.out.println(" erour :"+e.getMessage());
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                 System.out.println(" erour :"+e.getMessage());
-                }
+       
             }
         }
-    }
 }

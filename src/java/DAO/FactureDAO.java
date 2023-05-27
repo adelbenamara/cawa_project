@@ -63,10 +63,10 @@ public class FactureDAO {
                   List<LigneFacture> lignesFacture = new ArrayList<>();
                 while (ligneFactureResultSet.next()) {
                     int ligneId = ligneFactureResultSet.getInt("id");
-                    int articleRef = ligneFactureResultSet.getInt("id_article");
+                    String articleRef = ligneFactureResultSet.getString("ref_article");
                     int quantity = ligneFactureResultSet.getInt("quantite");
                     ArticleDAO articleDAO = new ArticleDAO();
-                    Article article = articleDAO.getArticleById(articleRef);
+                    Article article = articleDAO.getArticleByID(articleRef);
                     double totalPrice = quantity * article.getPrice();
                     LigneFacture ligneFacture = new LigneFacture(ligneId, articleRef, quantity, totalPrice);
                     lignesFacture.add(ligneFacture);
@@ -132,18 +132,18 @@ public void insertFacture(Facture facture) throws SQLException, ClassNotFoundExc
         }
 
         // Insert the line items and update stock quantity
-        String ligneFactureQuery = "INSERT INTO lignes_facture (id_facture, id_article, quantite) VALUES (?, ?, ?)";
+        String ligneFactureQuery = "INSERT INTO lignes_facture (id_facture, ref_article, quantite) VALUES (?, ?, ?)";
         statement = connection.prepareStatement(ligneFactureQuery);
 
         for (LigneFacture ligneFacture : facture.getLigneFactureList()) {
             statement.setInt(1, factureId);
-            statement.setInt(2, ligneFacture.getArticleRef());
+            statement.setString(2, ligneFacture.getArticleRef());
             statement.setInt(3, ligneFacture.getQuantity());
             statement.executeUpdate();
 
             // Update the stock quantity of the article
             ArticleDAO articleDAO = new ArticleDAO();
-            Article article = articleDAO.getArticleById(ligneFacture.getArticleRef());
+            Article article = articleDAO.getArticleByID(ligneFacture.getArticleRef());
             if (article != null) {
                 int updatedStockQuantity = article.getStockQuantity() - ligneFacture.getQuantity();
                 article.setStockQuantity(updatedStockQuantity);

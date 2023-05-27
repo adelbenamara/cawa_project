@@ -54,6 +54,8 @@
     <jsp:include page="accueil.jsp" />
 
     <form method="post" action="ajouter-article">
+         <label for="ref_article">Référence article:</label>
+         <input type="text" id="ref_article" name="ref_article" required><br><br>
         <label for="designation">Nom article:</label>
         <input type="text" id="designation" name="designation" required><br><br>
         <label for="price">Prix:</label>
