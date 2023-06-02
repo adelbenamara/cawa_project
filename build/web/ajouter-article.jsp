@@ -1,16 +1,7 @@
-<%-- 
-    Document   : ajouter-article
-    Created on : May 19, 2023, 7:21:02 PM
-    Author     : adel
---%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+  <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter un article</title>
-    <style>
+
+<style>
         form {
             width: 600px;
             margin: 0 auto;
@@ -49,10 +40,9 @@
             background-color: #45a049;
         }
     </style>
-</head>
-<body>
-    <jsp:include page="accueil.jsp" />
-
+     <c:if test="${not empty errorMessage}">
+        <p style="color: red;   text-align: center">${errorMessage}</p>
+    </c:if>
     <form method="post" action="ajouter-article">
          <label for="ref_article">Référence article:</label>
          <input type="text" id="ref_article" name="ref_article" required><br><br>
@@ -64,5 +54,3 @@
         <input type="number" id="stockQuantity" name="stockQuantity" min="1" required><br><br>
         <input type="submit" value="Ajouter">
     </form>
-</body>
-</html>

@@ -24,7 +24,7 @@ public class ArticleDAO {
         List<Article> articles = new ArrayList<>();
 
         try (
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM articles");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM articles WHERE is_delete = 0");
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -59,18 +59,15 @@ public class ArticleDAO {
         }
     }
 
-    public void deleteArticle(String ref_article) throws SQLException {
-        try ( 
-             PreparedStatement statement = connection.prepareStatement("DELETE FROM articles WHERE ref_article = ?")) {
-
-            statement.setString(1, ref_article);
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression de l'article : " + e.getMessage());
-        }
+  public void deleteArticle(String ref_article) throws SQLException {
+    try (PreparedStatement statement = connection.prepareStatement("UPDATE articles SET is_delete = 1 WHERE ref_article = ?")) {
+        statement.setString(1, ref_article);
+        statement.executeUpdate();
+    } catch (SQLException e) {
+        System.out.println("Erreur lors de la suppression de l'article : " + e.getMessage());
     }
+}
+
     
     public Article getArticleByID(String ref_article) throws SQLException {
     Article article = null;
@@ -98,33 +95,6 @@ public class ArticleDAO {
     return article;
 }
 
-
-//    public Article getArticleById(int articleId) throws SQLException{
-//        Article article = null;
-//
-//        try (
-//             PreparedStatement statement = connection.prepareStatement("SELECT * FROM articles WHERE id = ?")) {
-//
-//            statement.setInt(1, articleId);
-//
-//            try (ResultSet resultSet = statement.executeQuery()) {
-//                if (resultSet.next()) {
-//                    int id = resultSet.getInt("id");
-//                    String designation = resultSet.getString("designation");
-//                    double price = resultSet.getDouble("prix");
-//                    int stockQuantity = resultSet.getInt("quantite_stock");
-//
-//                    article = new Article(id, designation, price, stockQuantity);
-//                }
-//            }
-//
-//        } catch (SQLException e) {
-//            System.out.println("Erreur lors de la récupération de l'article : " + e.getMessage());
-//        }
-//
-//        return article;
-//    }
-    
     
     public void updateArticle(Article article) throws SQLException {
     try (

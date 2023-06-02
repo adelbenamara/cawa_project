@@ -63,7 +63,7 @@ public class ClientDAO {
         ResultSet resultSet = null;
 
         try {
-            String query = "SELECT * FROM clients";
+           String query = "SELECT * FROM clients WHERE is_delete = 0";
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
 
@@ -77,29 +77,7 @@ public class ClientDAO {
                 clients.add(client);
             }
         } catch (SQLException e) {
-           System.out.println(" erour :"+e.getMessage());
-//        } finally {
-//            if (resultSet != null) {
-//                try {
-//                    resultSet.close();
-//                } catch (SQLException e) {
-//                   System.out.println(" erour :"+e.getMessage());
-//                }
-//            }
-//            if (statement != null) {
-//                try {
-//                    statement.close();
-//                } catch (SQLException e) {
-//                  System.out.println(" erour :"+e.getMessage());
-//                }
-//            }
-//            if (connection != null) {
-//                try {
-//                    connection.close();
-//                } catch (SQLException e) {
-//                  System.out.println(" erour :"+e.getMessage());
-//                }
-//            }
+           System.out.println(" erour :"+e.getMessage());  
         }
 
         return clients;
@@ -122,20 +100,34 @@ public class ClientDAO {
         } 
     }
 
-    public void deleteClient(String clientId)  {
-       
+ public void deleteClient(String clientId) {
+    try {
+        int id = Integer.parseInt(clientId);
+        String query = "UPDATE clients SET is_delete = 1 WHERE id = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, id);
+        statement.executeUpdate();
+    } catch (SQLException e) {
+        System.out.println("Erreur lors de la suppression du client : " + e.getMessage());
+    }
+}
+ 
+       public boolean isValidClient(int id) {
         PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean isValid = false;
 
         try {
-           
-           int Id = Integer.parseInt(clientId);
-            String query = "DELETE FROM clients WHERE id = ?";
+            String query = "SELECT * FROM clients WHERE id = ? and is_delete = 0";
             statement = connection.prepareStatement(query);
-            statement.setInt(1, Id);
-            statement.executeUpdate();
+            statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+
+            isValid = resultSet.next();
         } catch (SQLException e) {
-           System.out.println(" erour :"+e.getMessage());
-       
-            }
-        }
+            System.out.println("Error: " + e.getMessage());
+        } 
+
+        return isValid;
+    }
 }

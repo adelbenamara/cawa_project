@@ -5,20 +5,7 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter une ligne de facture</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-    }
-
-    h2 {
-        text-align: center;
-    }
 
     form {
         width: 400px;
@@ -104,11 +91,6 @@
         background-color: #0c7cd5;
     }
 </style>
-
-</head>
-
-<body>
-    <jsp:include page="accueil.jsp" />
     <c:if test="${not empty facture}">
         <div class="right">
             <c:forEach items="${clients}" var="client">
@@ -125,9 +107,15 @@
         </div>
     </c:if>
     <h2>Ajouter une ligne de facture</h2>
-    <c:if test="${not empty error}">
-        <p style="color: red;">${error}</p>
+    <c:if test="${not empty errorMessage}">
+        <p style="color: red;">${errorMessage}</p>
     </c:if>
+        
+<c:if test="${empty articles}">
+    <p>No article to add.</p>
+</c:if>
+
+<c:if test="${not empty articles}">
     <form method="post" action="ajouter-line">
         <c:if test="${not empty ligneFactureList}">
             <input type="hidden" value="${ligneFactureList}" name="ligneFactureList">
@@ -144,6 +132,8 @@
         <input type="number" id="quantiteVendue" min="1" name="quantiteVendue" required>
         <input type="submit" value="Ajouter">
     </form>
+</c:if>
+
 
     <c:if test="${not empty ligneFactureList}">
         <h2>Table des lignes de facture</h2>
@@ -179,6 +169,3 @@
             </tbody>
         </table>
     </c:if>
-</body>
-
-</html>

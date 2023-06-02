@@ -3,14 +3,7 @@
     Created on : May 19, 2023, 2:01:54 PM
     Author     : adel
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter un client</title>
     <style>
         form {
             width: 600px;
@@ -50,18 +43,13 @@
             background-color: #45a049;
         }
     </style>
-</head>
-<body>
-    <jsp:include page="accueil.jsp" />
-
+    
     <form method="post" action="ajouter-client">
         <label for="nom">Nom:</label>
         <input type="text" id="nom" name="nom" required><br><br>
-        <label for="telephone">TÃ©lÃ©phone:</label>
+        <label for="telephone">Téléphone:</label>
         <input type="text" id="telephone" name="telephone" required><br><br>
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required><br><br>
         <input type="submit" value="Ajouter">
     </form>
-</body>
-</html>

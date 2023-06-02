@@ -14,56 +14,91 @@
     <title>Login Page</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+/*            font-family: Arial, sans-serif;
             background-color: #f2f2f2;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             height: 100vh;
+            */
+position: fixed;
+width: 100%;
+height: 100%;
+left: 0px;
+top: 0px;
+
+/* SecondaryColor */
+background: #CCCCCC;
         }
 
         .login-container {
-            background-color: #fff;
-            border-radius: 5px;
-            padding-left:10% ;
-             padding-right:10%  ;
-             padding-top: 5% ;
-             padding-bottom: 10%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+position: absolute;
+left: 10%;
+right: 12%;
+top: 8%;
+bottom: 10%;
+background: #FFFFFF;
+box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.15);
+border-radius: 30px;
         }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+.hbn {
+/* Bienvenue */
 
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 40px;
+line-height: 97px;
+text-align: right;
+color: #000000;
+float: left;
+padding-left: 2%;
+color: #000000;
 
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding-left: 10px ;
-            padding:     10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
 
-        input[type="submit"] {
-            display: block;
-            width: 100%;
-           padding: 6%;
-           text-align: center;
-           margin-left: 5%;
-           margin-top: 10%;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+/* Inside auto layout */
+
+        }
+        .user_lable{/* style3 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 25px;
+line-height: 30px;
+text-align: right;
+
+color: #000000;
+}
+.img{
+    
+position: static;
+height: 100%;
+float: right;
+border-radius: 10px;
+    
+    
+}
+.user_block{
+            
+            /* Frame 27 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+padding: 0px;
+gap: 9px;
+
+position: absolute;
+width: 420px;
+height: 131px;
+left: 87px;
+top: 212px;
+
+
         }
 
         .error-message {
@@ -75,15 +110,20 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
+        <img class="img" src="images/logo.jpg"  />
+        <div class="hbn">Bienvenue</div>
         <form method="post" action="login">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="user" required><br><br>
+            <div  class="user_block">    <label class="user_lable">Username:</label>
+            <input type="text" id="username" name="user" required>
+            </div>
             <label for="password">Password:</label>
             <input type="password" id="password" name="pass" required><br><br>
             <input type="submit" value="Submit">
         </form>
-        <c:if test="${not empty errorMessage}">
+
+
+
+<c:if test="${not empty errorMessage}">
             <p class="error-message">${errorMessage}</p>
         </c:if>
     </div>

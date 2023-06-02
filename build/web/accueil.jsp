@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -75,6 +74,7 @@
             </li>
         </ul>
     </div>
+    
 
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
@@ -98,10 +98,14 @@
             </ul>
         </div>
     </nav>
+     <c:if test="${not empty pageToInclude}">
+<div class="center-area">
+    <jsp:include page="${pageToInclude}" />
+</div>
+     </c:if>
     <!-- Inclure le CDN de jQuery et de Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<div class="center-area">
   
 </body>
 </html>

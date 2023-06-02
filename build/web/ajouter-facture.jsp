@@ -1,12 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter une facture</title>
-    <style>
+  <style>
         
          h5{    text-align: center}
         form {
@@ -79,10 +73,6 @@
     padding: 10px;
 }  
     </style>
-</head>
-<body>
-    <jsp:include page="accueil.jsp" />
-
     <h5>Ajouter une facture</h5>
 
     <form method="post" action="ajouter-facture">
@@ -105,5 +95,3 @@
         <input type="text" id="modePaiement" name="modePaiement" required><br><br>
         <input type="submit" value="Ajouter">
     </form>  
-</body>
-</html>

@@ -7,11 +7,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Liste des articles</title>
     <style>
         table {
             width: 100%;
@@ -44,11 +39,6 @@
             cursor: pointer;
         }
     </style>
-</head>
-<body>
-    <jsp:include page="accueil.jsp" />
-    <h4>Liste des articles :</h4>
-
     <c:if test="${not empty articles}">
         <table>
             <tr>
@@ -77,5 +67,3 @@
             </c:forEach>
         </table>
     </c:if>
-</body>
-</html>

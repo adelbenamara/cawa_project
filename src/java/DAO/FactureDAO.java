@@ -40,7 +40,7 @@ public class FactureDAO {
     Facture facture = null;
 
     try {
-        String factureQuery = "SELECT * FROM factures WHERE id = ?";
+       String factureQuery = "SELECT * FROM factures WHERE id = ? AND is_delete = 0";
         try (PreparedStatement factureStatement = connection.prepareStatement(factureQuery)) {
             factureStatement.setInt(1, numFacture);
             ResultSet factureResultSet = factureStatement.executeQuery();
@@ -87,30 +87,31 @@ public class FactureDAO {
     
   
 
-    public List<Facture> getAllFactures() {
-        List<Facture> factures = new ArrayList<>();
+public List<Facture> getAllFactures() {
+    List<Facture> factures = new ArrayList<>();
 
-        try {
-            String query = "SELECT * FROM factures";
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                ResultSet resultSet = statement.executeQuery();
-                
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    Date dateFacture = resultSet.getDate("date_facture");
-                    String modePaiement = resultSet.getString("mode_paiement");
-                    int id_client = resultSet.getInt("id_client");
-                    
-                    Facture facture = new Facture(id, dateFacture, modePaiement, id_client);
-                    
-                    factures.add(facture);
-                }   }
-        } catch (SQLException e) {
-            System.out.println(" erour :"+e.getMessage());
+    try {
+        String query = "SELECT * FROM factures WHERE is_delete = 0";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                Date dateFacture = resultSet.getDate("date_facture");
+                String modePaiement = resultSet.getString("mode_paiement");
+                int id_client = resultSet.getInt("id_client");
+
+                Facture facture = new Facture(id, dateFacture, modePaiement, id_client);
+
+                factures.add(facture);
+            }
         }
-
-        return factures;
+    } catch (SQLException e) {
+        System.out.println("Erreur lors de la récupération des factures : " + e.getMessage());
     }
+
+    return factures;
+}
 
 //
 
@@ -158,18 +159,18 @@ public void insertFacture(Facture facture) throws SQLException, ClassNotFoundExc
 
 public void deleteFacture(int id) {
     try {
-        // Delete the line items associated with the facture
-        String deleteLineItemsQuery = "DELETE FROM lignes_facture WHERE id_facture = ?";
-        try (PreparedStatement lineItemsStatement = connection.prepareStatement(deleteLineItemsQuery)) {
-            lineItemsStatement.setInt(1, id);
-            lineItemsStatement.executeUpdate();
-        }
-
-        // Delete the facture itself
-        String deleteFactureQuery = "DELETE FROM factures WHERE id = ?";
-        try (PreparedStatement factureStatement = connection.prepareStatement(deleteFactureQuery)) {
+        // Update the is_delete column in factures table
+        String updateFactureQuery = "UPDATE factures SET is_delete = 1 WHERE id = ?";
+        try (PreparedStatement factureStatement = connection.prepareStatement(updateFactureQuery)) {
             factureStatement.setInt(1, id);
             factureStatement.executeUpdate();
+        }
+
+        // Update the is_delete column in lignes_facture table
+        String updateLineItemsQuery = "UPDATE lignes_facture SET is_delete = 1 WHERE id_facture = ?";
+        try (PreparedStatement lineItemsStatement = connection.prepareStatement(updateLineItemsQuery)) {
+            lineItemsStatement.setInt(1, id);
+            lineItemsStatement.executeUpdate();
         }
     } catch (SQLException e) {
         System.out.println("Error: " + e.getMessage());

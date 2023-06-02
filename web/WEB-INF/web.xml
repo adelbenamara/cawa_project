@@ -3,8 +3,8 @@
     <!-- Add welcome-file-list -->
     <welcome-file-list>
         <welcome-file>
-       login.jsp    
-    </welcome-file>
+        login.jsp 
+        </welcome-file>
     </welcome-file-list>
     <!-- servlet -->
     <servlet>
@@ -27,8 +27,8 @@
         <servlet-name>HomeController</servlet-name>
         <servlet-class>Controller.HomeController</servlet-class>
     </servlet>
-    <!-- Add the filter configuration -->
-    <filter>
+<!--     Add the filter configuration 
+-->    <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>Controller.AuthenticationFilter</filter-class>
     </filter>
@@ -50,8 +50,6 @@
         <url-pattern>/supprimer-article</url-pattern>
         <url-pattern>/articles</url-pattern>
         <url-pattern>/generate-pdf</url-pattern>
-       <url-pattern>*.jsp</url-pattern>
-       <url-pattern>/</url-pattern>
     </filter-mapping>
     <!-- Add the filter configuration -->
     <!-- Add the servlet-mapping -->
@@ -86,7 +84,6 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
-        <url-pattern>/</url-pattern>
         <url-pattern>/Login</url-pattern>
         <url-pattern>/Logout</url-pattern>
     </servlet-mapping>

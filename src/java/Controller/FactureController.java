@@ -48,7 +48,8 @@ public class FactureController extends HttpServlet {
         if ( action.equals("/ajouter-facture")) {
             List<Client> clients =   clientDAO.getAllClients();
             request.setAttribute("clients", clients);
-            request.getRequestDispatcher("ajouter-facture.jsp").forward(request, response);
+            request.setAttribute("pageToInclude", "ajouter-facture.jsp");
+            request.getRequestDispatcher("accueil.jsp").forward(request, response);
         
         }else if (action.equals("/factures") ) {  
             
@@ -56,8 +57,8 @@ public class FactureController extends HttpServlet {
                 List<Client> clients =   clientDAO.getAllClients();             
                 session.setAttribute("factures", factures);
                 session.setAttribute("clients", clients); 
-                request.getRequestDispatcher("factures.jsp").forward(request, response);
-            
+                request.setAttribute("pageToInclude", "factures.jsp");
+                request.getRequestDispatcher("accueil.jsp").forward(request, response);
 }
     }
 
@@ -121,26 +122,53 @@ public class FactureController extends HttpServlet {
     session.setAttribute("clients", clients);
     session.setAttribute("ligneFactureList", ligneFactureList);
     session.setAttribute("articles", articles);
-    request.getRequestDispatcher("facture-details.jsp").forward(request, response);
+                request.setAttribute("pageToInclude", "facture-details.jsp");
+                request.getRequestDispatcher("accueil.jsp").forward(request, response);
 }
 
     
-   private void addLine(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ClassNotFoundException {
+private void addLine(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ClassNotFoundException {
     String modePaiement = request.getParameter("modePaiement");
-    int clientId = Integer.parseInt(request.getParameter("clientId"));
-    // Create a new Facture object and store it in session
-     HttpSession session = request.getSession(false);
-    
-    Facture facture = new Facture(modePaiement, clientId);
-    
-    // Retrieve the ligneFactureList from session or create a new one
-    List<Article> articles = articleDAO.getAllArticles();
-    List<Client> clients = clientDAO.getAllClients();
-     session.setAttribute("facture", facture); 
-    session.setAttribute("articles", articles);
-     session.setAttribute("clients", clients);
-    request.getRequestDispatcher("ajouter-ligne.jsp").forward(request, response);
+    String clientIdStr = request.getParameter("clientId");
+
+    if (modePaiement != null && !modePaiement.isEmpty() && clientIdStr != null && !clientIdStr.isEmpty()) {
+        try {
+            int clientId = Integer.parseInt(clientIdStr);
+
+            // Vérification de la validité du client
+            if (!clientDAO.isValidClient(clientId)) {
+                // Afficher un message d'erreur et rediriger vers la page d'ajout de facture
+                request.setAttribute("errorMessage", "Client invalide");
+                  request.setAttribute("pageToInclude", "ajouter-facture.jsp");
+                request.getRequestDispatcher("accueil.jsp").forward(request, response);
+                return;
+            }
+
+            // Create a new Facture object and store it in session
+            HttpSession session = request.getSession(false);
+            Facture facture = new Facture(modePaiement, clientId);
+
+            // Retrieve the ligneFactureList from session or create a new one
+            List<Article> articles = articleDAO.getAllArticles();
+            List<Client> clients = clientDAO.getAllClients();
+            session.setAttribute("facture", facture);
+            session.setAttribute("articles", articles);
+            session.setAttribute("clients", clients);
+            request.getRequestDispatcher("ajouter-ligne.jsp").forward(request, response);
+        } catch (NumberFormatException ex) {
+            // Afficher un message d'erreur et rediriger vers la page d'ajout de facture
+            request.setAttribute("errorMessage", "ID client invalide");            request.getRequestDispatcher("accueil.jsp").forward(request, response);
+            request.setAttribute("pageToInclude", "ajouter-facture.jsp");
+                request.getRequestDispatcher("accueil.jsp").forward(request, response);
+        }
+    } else {
+        // Afficher un message d'erreur et rediriger vers la page d'ajout de facture
+        request.setAttribute("errorMessage", "Veuillez remplir tous les champs");
+        request.setAttribute("pageToInclude", "ajouter-facture.jsp");
+                request.getRequestDispatcher("accueil.jsp").forward(request, response);
+    }
 }
+
    
 private void addLineFacture(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String articleRef = request.getParameter("article");
@@ -171,24 +199,25 @@ private void addLineFacture(HttpServletRequest request, HttpServletResponse resp
 
                 List<Article> articles = articleDAO.getAllArticles();
                 session.setAttribute("articles", articles);
-
-                request.getRequestDispatcher("ajouter-ligne.jsp").forward(request, response);
+                
+                 request.setAttribute("pageToInclude", "ajouter-ligne.jsp");
+                request.getRequestDispatcher("accueil.jsp").forward(request, response);
             } else {
                 // Handle the case when the article or the quantities are invalid
                 // Redirect or display an error message to the user
                 // For example:
                 request.setAttribute("error", "Invalid article or quantity");
-                request.getRequestDispatcher("ajouter-ligne.jsp").forward(request, response);
+                 request.setAttribute("pageToInclude", "ajouter-ligne.jsp");
+                request.getRequestDispatcher("accueil.jsp").forward(request, response);
             }
         } catch (NumberFormatException | SQLException ex) {
             Logger.getLogger(FactureController.class.getName()).log(Level.SEVERE, null, ex);
         }
     } else {
-        // Handle the case when articleRef or quantiteVendue is missing
-        // Redirect or display an error message to the user
-        // For example:
-        request.setAttribute("error", "Invalid article or quantity");
-        request.getRequestDispatcher("ajouter-ligne.jsp").forward(request, response);
+     
+                request.setAttribute("error", "Invalid article or quantity");
+                request.setAttribute("pageToInclude", "ajouter-ligne.jsp");
+                request.getRequestDispatcher("accueil.jsp").forward(request, response);
     }
 }
 
@@ -221,7 +250,8 @@ private void deleteLine(HttpServletRequest request, HttpServletResponse response
     }
 
     // Rediriger vers la page d'ajout de ligne de facture
-    response.sendRedirect("ajouter-ligne.jsp");
+                request.setAttribute("pageToInclude", "ajouter-ligne.jsp");
+                request.getRequestDispatcher("accueil.jsp").forward(request, response);
 }
 
      private void deleteFacture(HttpServletRequest request, HttpServletResponse response)

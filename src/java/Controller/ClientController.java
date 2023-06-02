@@ -76,25 +76,36 @@ public class ClientController extends HttpServlet {
         HttpSession session = request.getSession(false);
         List<Client> clients = clientDAO.getAllClients();
         session.setAttribute("clients", clients);
-        request.getRequestDispatcher("clients.jsp").forward(request, response);
+        request.setAttribute("pageToInclude", "clients.jsp");
+        request.getRequestDispatcher("accueil.jsp").forward(request, response);
     }
 
     private void showAddClientForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("ajouter-client.jsp").forward(request, response);
+           request.setAttribute("pageToInclude", "ajouter-client.jsp");
+        request.getRequestDispatcher("accueil.jsp").forward(request, response);
     }
 
-    private void addClient(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
-        String nom = request.getParameter("nom");
-        String telephone = request.getParameter("telephone");
-        String email = request.getParameter("email");
-
-        Client client = new Client(nom, telephone, email);
-        clientDAO.addClient(client);
-
-        response.sendRedirect("clients");
+ private void addClient(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException, ClassNotFoundException {
+    String nom = request.getParameter("nom");
+    String telephone = request.getParameter("telephone");
+    String email = request.getParameter("email");
+    
+    if (!validateClientFields(nom, telephone, email)) {
+        // Afficher un message d'erreur et rediriger vers le formulaire d'ajout de client
+        request.setAttribute("errorMessage", "Veuillez vérifier les champs du formulaire.");
+             request.setAttribute("pageToInclude", "ajouter-client.jsp");
+        request.getRequestDispatcher("accueil.jsp").forward(request, response);
+        return;
     }
+
+    Client client = new Client(nom, telephone, email);
+    clientDAO.addClient(client);
+
+    response.sendRedirect("clients");
+}
+
 
     private void deleteClient(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
@@ -104,4 +115,23 @@ public class ClientController extends HttpServlet {
 
         response.sendRedirect("clients");
     }
+    private boolean validateClientFields(String nom, String telephone, String email) {
+    // Vérification du champ de nom
+    if (nom.isEmpty() || !nom.matches("[a-zA-Z]+")) {
+        return false;
+    }
+    
+    // Vérification du champ de téléphone
+    if (telephone.isEmpty() || !telephone.matches("[0-9]+")) {
+        return false;
+    }
+    
+    // Vérification du champ d'email
+    if (email.isEmpty() || !email.matches("[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]+")) {
+        return false;
+    }
+    
+    return true;
+}
+
 }

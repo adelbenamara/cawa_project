@@ -5,9 +5,6 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Facture Details</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -51,9 +48,6 @@
             margin: 10px 0;
         }
     </style>
-</head>
-<body>
-     <jsp:include page="accueil.jsp" />
      <c:if test="${not empty facture }">
     <h4>Facture Information</h4>
     <table>
@@ -124,5 +118,3 @@
         <input type="submit" value="Print PDF">
     </form>
    </c:if> </c:if>
-</body>
-</html>

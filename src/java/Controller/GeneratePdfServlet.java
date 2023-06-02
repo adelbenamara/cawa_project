@@ -118,7 +118,7 @@ public class GeneratePdfServlet extends HttpServlet {
                 response.getOutputStream().write(baos.toByteArray());
                 response.getOutputStream().flush();
             } catch (DocumentException e) {
-                e.printStackTrace();
+                System.out.println("erour"+e.getMessage());
                 // Handle the exception
             }
         } catch (ClassNotFoundException ex) {
