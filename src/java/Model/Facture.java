@@ -5,10 +5,11 @@
  */
 package Model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Facture {
+public class Facture implements Serializable{
     public static float TVA = 0.012f ;
     private int numFacture;
     private Date dateFacture;

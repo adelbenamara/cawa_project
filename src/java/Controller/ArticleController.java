@@ -79,12 +79,15 @@ private void addArticle(HttpServletRequest req, HttpServletResponse resp) throws
     String priceStr =req.getParameter("price");
     String  stockQuantityStr = req.getParameter("stockQuantity");
     
-   if (!validateArticleFields(ref_article, designation, priceStr, stockQuantityStr)) {
-        // Afficher un message d'erreur et rediriger vers la page du formulaire d'ajout
-        req.setAttribute("errorMessage", "Veuillez vérifier les champs du formulaire.");
-        req.getRequestDispatcher("ajouter-article.jsp").forward(req, resp);
-        return;
-    }
+   String errorMessage = validateArticleFields(ref_article, designation, priceStr, stockQuantityStr);
+if (errorMessage != null) {
+    // Afficher le message d'erreur spécifique et rediriger vers la page du formulaire d'ajout
+    req.setAttribute("errorMessage", errorMessage);
+    req.setAttribute("pageToInclude", "ajouter-article.jsp");
+    req.getRequestDispatcher("accueil.jsp").forward(req, resp);
+    return;
+}
+
      double price = Double.parseDouble(priceStr);
     int stockQuantity = Integer.parseInt(stockQuantityStr);
     // Vérifier si l'article existe déjà dans la base de données
@@ -123,47 +126,51 @@ private void addArticle(HttpServletRequest req, HttpServletResponse resp) throws
     }
     
     // Méthode pour valider les champs du formulaire d'ajout d'article
-private boolean validateArticleFields(String ref_article, String designation, String priceStr, String stockQuantityStr) {
+private String validateArticleFields(String ref_article, String designation, String priceStr, String stockQuantityStr) {
+    String errorMessage = null;
+
     // Vérification de la référence de l'article
     if (ref_article.isEmpty() || !ref_article.matches("[a-zA-Z0-9]+")) {
-        return false;
+        errorMessage = "La référence de l'article est invalide.";
     }
-    
-    // Vérification de la désignation
-    if (designation.isEmpty() || !designation.matches("[a-zA-Z0-9]+")) {
-        return false;
-    }
-    
+
+   // Vérification de la désignation
+    if (designation.isEmpty() || !designation.matches("[a-zA-Z0-9\\s]+")) {
+    errorMessage = "La désignation de l'article est invalide.";
+}
+
+
     // Vérification du champ de prix
     if (priceStr.isEmpty()) {
-        return false;
+        errorMessage = "Le champ de prix est requis.";
     } else {
         try {
             double price = Double.parseDouble(priceStr);
             if (price <= 0) {
-                return false;
+                errorMessage = "Le prix de l'article doit être supérieur à zéro.";
             }
         } catch (NumberFormatException e) {
-            return false;
+            errorMessage = "Le prix de l'article est invalide.";
         }
     }
-    
+
     // Vérification du champ de stockQuantity
     if (stockQuantityStr.isEmpty()) {
-        return false;
+        errorMessage = "Le champ de quantité en stock est requis.";
     } else {
         try {
             int stockQuantity = Integer.parseInt(stockQuantityStr);
             if (stockQuantity < 0) {
-                return false;
+                errorMessage = "La quantité en stock de l'article ne peut pas être négative.";
             }
         } catch (NumberFormatException e) {
-            return false;
+            errorMessage = "La quantité en stock de l'article est invalide.";
         }
     }
-    
-    return true;
+
+    return errorMessage;
 }
+
 
     
     

@@ -154,11 +154,12 @@ private void addLine(HttpServletRequest request, HttpServletResponse response) t
             session.setAttribute("facture", facture);
             session.setAttribute("articles", articles);
             session.setAttribute("clients", clients);
-            request.getRequestDispatcher("ajouter-ligne.jsp").forward(request, response);
+            request.setAttribute("pageToInclude", "ajouter-ligne.jsp");
+            request.getRequestDispatcher("accueil.jsp").forward(request, response);
         } catch (NumberFormatException ex) {
             // Afficher un message d'erreur et rediriger vers la page d'ajout de facture
-            request.setAttribute("errorMessage", "ID client invalide");            request.getRequestDispatcher("accueil.jsp").forward(request, response);
-            request.setAttribute("pageToInclude", "ajouter-facture.jsp");
+                request.setAttribute("errorMessage", "ID client invalide");            request.getRequestDispatcher("accueil.jsp").forward(request, response);
+                request.setAttribute("pageToInclude", "ajouter-facture.jsp");
                 request.getRequestDispatcher("accueil.jsp").forward(request, response);
         }
     } else {
@@ -203,10 +204,8 @@ private void addLineFacture(HttpServletRequest request, HttpServletResponse resp
                  request.setAttribute("pageToInclude", "ajouter-ligne.jsp");
                 request.getRequestDispatcher("accueil.jsp").forward(request, response);
             } else {
-                // Handle the case when the article or the quantities are invalid
-                // Redirect or display an error message to the user
-                // For example:
-                request.setAttribute("error", "Invalid article or quantity");
+              
+                request.setAttribute("errorMessage", "Invalid article or quantity");
                  request.setAttribute("pageToInclude", "ajouter-ligne.jsp");
                 request.getRequestDispatcher("accueil.jsp").forward(request, response);
             }
@@ -215,7 +214,7 @@ private void addLineFacture(HttpServletRequest request, HttpServletResponse resp
         }
     } else {
      
-                request.setAttribute("error", "Invalid article or quantity");
+                request.setAttribute("errorMessage", "Invalid article or quantity");
                 request.setAttribute("pageToInclude", "ajouter-ligne.jsp");
                 request.getRequestDispatcher("accueil.jsp").forward(request, response);
     }
@@ -224,16 +223,23 @@ private void addLineFacture(HttpServletRequest request, HttpServletResponse resp
 
     
     
-   private void finishFacture(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ClassNotFoundException {
+private void finishFacture(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ClassNotFoundException {
     // Retrieve the facture object from session
     Facture facture = (Facture) request.getSession().getAttribute("facture");
-     ArrayList<LigneFacture> ligneFactureList = (ArrayList<LigneFacture>) request.getSession().getAttribute("ligneFactureList");
-     facture.setLigneFactureList(ligneFactureList);
+    ArrayList<LigneFacture> ligneFactureList = (ArrayList<LigneFacture>) request.getSession().getAttribute("ligneFactureList");
+    facture.setLigneFactureList(ligneFactureList);
+
     // Insert the facture and line items into the database
     factureDAO.insertFacture(facture);
+
+    // Remove facture and ligneFactureList from session
+    request.getSession().removeAttribute("facture");
+    request.getSession().removeAttribute("ligneFactureList");
+
     // Redirect to the desired page
     response.sendRedirect(request.getContextPath() + "/factures");
 }
+
 
 private void deleteLine(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {

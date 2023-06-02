@@ -119,7 +119,12 @@ flex: none;
 order: 0;
 flex-grow: 0;
 }
-
+.form{
+  position: relative;
+  top: 35%;
+  left: -19%;
+  float: left;
+}
 .error-message {
             color: red;
             margin-top: 10px;
@@ -131,7 +136,7 @@ flex-grow: 0;
     <div class="login-container">
         <img class="img" src="images/logo.jpg"  />
         <div class="hbn">Bienvenue</div>
-        <form method="post" action="Login"   >
+        <form method="post" action="Login" class="form"  >
               <label class="user_lable">Username:</label>
             <input type="text" id="username" name="user" required>
            

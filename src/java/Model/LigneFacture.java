@@ -1,6 +1,8 @@
 package Model;
 
-public class LigneFacture {
+import java.io.Serializable;
+
+public class LigneFacture implements Serializable {
     private int numFacture;
     private String articleRef;
     private int quantity;

@@ -104,6 +104,7 @@ public class ClientController extends HttpServlet {
     clientDAO.addClient(client);
 
     response.sendRedirect("clients");
+    
 }
 
 

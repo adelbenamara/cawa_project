@@ -85,8 +85,9 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
-        <url-pattern>/Login</url-pattern>
-        <url-pattern>/Logout</url-pattern>
+       <url-pattern>/Login</url-pattern>
+        <url-pattern>/logout</url-pattern>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>

@@ -5,13 +5,15 @@
  */
 package Model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author adel
  */
 
 
-public class Article {
+public class Article implements Serializable{
 
   
     private String  ref_article;

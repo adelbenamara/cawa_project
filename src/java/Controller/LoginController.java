@@ -32,22 +32,22 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     String action = request.getServletPath();
      
         if (action.equals("/logout")) {
+            System.out.println("dakhlat");
             // Logout the user by invalidating the session
             HttpSession session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
             }
             // Redirect the user to the login page
-            response.sendRedirect(request.getContextPath()+"/login");
-        } else {
-         request.getRequestDispatcher("login.jsp").forward(request, response);
-        }
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+        }if (action.equals("/login")) {
+         request.getRequestDispatcher("login.jsp").forward(request, response);}
 }
 
 @Override
 protected void doPost(HttpServletRequest request, HttpServletResponse response)
   throws ServletException, IOException {
-    System.out.println("hello");
+    
   // Get the username and password from the form
   String username = request.getParameter("user");
   String password = request.getParameter("pass");
