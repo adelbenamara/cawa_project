@@ -40,13 +40,14 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             // Redirect the user to the login page
             response.sendRedirect(request.getContextPath()+"/login");
         } else {
-  request.getRequestDispatcher("login.jsp").forward(request, response);
+         request.getRequestDispatcher("login.jsp").forward(request, response);
         }
 }
 
 @Override
 protected void doPost(HttpServletRequest request, HttpServletResponse response)
   throws ServletException, IOException {
+    System.out.println("hello");
   // Get the username and password from the form
   String username = request.getParameter("user");
   String password = request.getParameter("pass");

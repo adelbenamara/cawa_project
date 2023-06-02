@@ -80,11 +80,11 @@ border-radius: 10px;
     
     
 }
+
+
+
 .user_block{
             
-            /* Frame 27 */
-
-/* Auto layout */
 display: flex;
 flex-direction: column;
 justify-content: center;
@@ -98,26 +98,48 @@ height: 131px;
 left: 87px;
 top: 212px;
 
-
         }
+.pass_block{
+width: 121px;
+height: 30px;
 
-        .error-message {
+/* style3 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 25px;
+line-height: 30px;
+text-align: right;
+
+color: #000000;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+}
+
+.error-message {
             color: red;
             margin-top: 10px;
             text-align: center;
-        }
+}
     </style>
 </head>
 <body>
     <div class="login-container">
         <img class="img" src="images/logo.jpg"  />
         <div class="hbn">Bienvenue</div>
-        <form method="post" action="login">
-            <div  class="user_block">    <label class="user_lable">Username:</label>
+        <form method="post" action="Login"   >
+              <label class="user_lable">Username:</label>
             <input type="text" id="username" name="user" required>
-            </div>
-            <label for="password">Password:</label>
+           
+              <div >
+            <label  class="pass_block" for="password">Password:</label>
             <input type="password" id="password" name="pass" required><br><br>
+              </div>
+            
             <input type="submit" value="Submit">
         </form>
 
