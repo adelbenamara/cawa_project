@@ -63,7 +63,7 @@ public class ClientDAO {
         ResultSet resultSet = null;
 
         try {
-           String query = "SELECT * FROM clients WHERE is_delete = 0";
+           String query = "SELECT * FROM clients WHERE is_delete = 0 ;";
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
 
@@ -111,6 +111,27 @@ public class ClientDAO {
         System.out.println("Erreur lors de la suppression du client : " + e.getMessage());
     }
 }
+ 
+ public int countClients() {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        int count = 0;
+
+        try {
+            String query = "SELECT COUNT(*) FROM clients WHERE is_delete = 0";
+            statement = connection.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        } 
+
+        return count;
+    }
+
  
        public boolean isValidClient(int id) {
         PreparedStatement statement = null;

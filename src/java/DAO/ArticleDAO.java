@@ -94,6 +94,23 @@ public class ArticleDAO {
 
     return article;
 }
+    public int countArticles() throws SQLException {
+    int count = 0;
+
+    try (
+        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM articles WHERE is_delete = 0");
+        ResultSet resultSet = statement.executeQuery()) {
+
+        if (resultSet.next()) {
+            count = resultSet.getInt(1);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
+    }
+
+    return count;
+}
 
     
     public void updateArticle(Article article) throws SQLException {

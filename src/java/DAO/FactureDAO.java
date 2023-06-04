@@ -176,5 +176,27 @@ public void deleteFacture(int id) {
         System.out.println("Error: " + e.getMessage());
     }
 }
+public int countFactures() {
+    PreparedStatement statement = null;
+    ResultSet resultSet = null;
+    int count = 0;
+
+    try {
+        String query = "SELECT COUNT(*) FROM factures WHERE is_delete = 0";
+        statement = connection.prepareStatement(query);
+        resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            count = resultSet.getInt(1);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
+    } finally {
+        // Close the resultSet, statement, and connection (similar to other methods)
+    }
+
+    return count;
+}
+
 
 }
