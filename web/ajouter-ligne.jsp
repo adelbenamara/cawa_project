@@ -5,167 +5,141 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<style>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-    form {
-        width: 400px;
-        margin: 0 auto;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-    }
 
-    label {
-        display: block;
-        margin-bottom: 10px;
-        font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-        color: #555;
-    }
-
-    input[type="submit"].add-button {
-        background-color: #4caf50;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    input[type="submit"].add-button:hover {
-        background-color: #45a049;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    th,
-    td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #f2f2f2;
-    }
-
-    input[type="submit"].delete-button {
-        background-color: #ff5c5c;
-        color: white;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-
-    input[type="submit"].delete-button:hover {
-        background-color: #e63f3f;
-    }
-
-    input[type="submit"].finish-button {
-        float: right;
-        background-color: #2196f3;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    input[type="submit"].finish-button:hover {
-        background-color: #0c7cd5;
-    }
+<c:if test="${not empty errorMessage}">
+    <p style="color: red;">${errorMessage}</p>
+</c:if>
+ <style>
+     #container {
+         
+           overflow: auto;
+   
+     }
 </style>
+
+    
+    
+<div class="container" style="position: absolute;bottom: 0;right: 0;width: 80%;height: 80%;">
     <c:if test="${not empty facture}">
-        <div class="right">
-            <c:forEach items="${clients}" var="client">
-                <c:if test="${client.id eq facture.idClient}">
-                    <h5>Nom Client: ${client.nom}</h5>
-                </c:if>
-            </c:forEach>
-            <h5>Mode Paiement : ${facture.modePaiement}</h5>
-            <form method="post" action="envoyer-facture">
-                <input type="hidden" name="facture" value="${facture}">
-                 <input type="hidden" value="${ligneFactureList}" name="ligneFactureList">
-                <input type="submit" class="finish-button" value="Terminer">
-            </form>
+        <c:forEach items="${clients}" var="client">
+            <c:if test="${client.id eq facture.idClient}">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <label class="col-form-label" style="color: rgb(0,0,0);font-weight: bold;font-family: Inter, sans-serif;padding: 5px 5px 5px 5px;font-size: 14px;">Nom de client :</label>
+                    </div>
+                    <div class="col">
+                        <span style="color: rgb(0,0,0);font-family: Inter, sans-serif;text-align: center;border-radius: 16px;border-width: 0px;background: #cccccc;padding: 2px 5px 5px 5px;position: absolute;margin-bottom: 0;">${client.nom}</span>
+                    </div>
+                </div>
+            </c:if>
+        </c:forEach>
+        <div class="row">
+            <div class="col-lg-3">
+                <label class="col-form-label" style="color: rgb(0,0,0);font-weight: bold;font-family: Inter, sans-serif;padding: 5px 5px 5px 5px;font-size: 14px;">Date de facture :</label>
+            </div>
+            <div class="col">
+                <span style="color: rgb(0,0,0);font-family: Inter, sans-serif;text-align: center;border-radius: 16px;border-width: 0px;
+                      background: #cccccc;padding: 2px 5px 5px 5px;position: absolute;margin-bottom: 0;">
+                     <fmt:formatDate value="${facture.dateFacture}" pattern="dd/MM/yyyy" /></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <label class="col-form-label" style="color: rgb(0,0,0);font-weight: bold;font-family: Inter, sans-serif;padding: 5px 5px 5px 5px;font-size: 14px;">Mode de paiement :</label>
+            </div>
+            <div class="col">
+                <span class="text-center" style="color: rgb(0,0,0);font-family: Inter, sans-serif;text-align: center;border-radius: 16px;border-width: 0px;background: #cccccc;padding: 2px 5px 5px 5px;position: absolute;margin-bottom: 0;"> ${facture.modePaiement}</span>
+            </div>
         </div>
     </c:if>
-    <h2>Ajouter une ligne de facture</h2>
-    <c:if test="${not empty errorMessage}">
-        <p style="color: red;">${errorMessage}</p>
-    </c:if>
-        
-<c:if test="${empty articles}">
-    <p>No article to add.</p>
-</c:if>
-
-<c:if test="${not empty articles}">
-    <form method="post" action="ajouter-line">
-        <c:if test="${not empty ligneFactureList}">
-            <input type="hidden" value="${ligneFactureList}" name="ligneFactureList">
-        </c:if>
-        <c:if test="${not empty articles}">
-            <label for="article">Article :</label>
-            <select id="article" name="article" required>
-                <c:forEach items="${articles}" var="article">
-                    <option value="${article.ref_article}">${article.designation}</option>
-                </c:forEach>
-            </select>
-        </c:if>
-        <label for="quantiteVendue">Quantité vendue :</label>
-        <input type="number" id="quantiteVendue" min="1" name="quantiteVendue" required>
-        <input type="submit" value="Ajouter">
-    </form>
-</c:if>
-
-
-    <c:if test="${not empty ligneFactureList}">
-        <h2>Table des lignes de facture</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Article</th>
-                    <th>Quantité vendue</th>
-                    <th>Total Price</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${ligneFactureList}" var="ligneFacture" varStatus="lineStatus">
-                    <tr>
-                        <td>
-                            <c:forEach items="${articles}" var="article">
-                                <c:if test="${article.ref_article eq ligneFacture.articleRef}">
-                                    ${article.designation}
+  <div class="row">
+    <div class="col-lg-7"><label class="col-form-label" style="color: rgb(0,0,0);font-family: Inter, sans-serif;padding: 12px 5px 5px 5px;font-size: 16px;font-weight: bold;text-align: left;">Ajouter une facture :</label></div>
+    <div class="col"> <form method="POST" action="envoyer-facture" ><input class="btn btn-primary" type="submit" style="font-family: Inter, sans-serif;font-size: 16px;background: #00c993;border-width: 0px;border-radius: 15px;margin-top: 11px;" value="terminer" /></form></div>
+</div>
+    <div class="row" style="background: #ebebeb;border-radius: 15px;width: 80%;margin-bottom: -24px;padding: 0px;padding-bottom: 18px;">
+        <div class="col">
+           
+                <form method="post" action="ajouter-line">
+                    
+                        <div class="row" style="margin: 10px;">
+                            <div class="col-lg-3">
+                                <label class="col-form-label" style="color: rgb(0,0,0);font-weight: bold;font-family: Inter, sans-serif;padding: 5px 5px 5px 5px;font-size: 14px;">Article :</label>
+                            </div>
+                            <div class="col">
+                                 <c:if test="${not empty articles}">
+                                <select name="article" style="font-family: Inter, sans-serif;font-size: 16px;padding: 5px 5px 5px 10px;border-width: 0px;border-radius: 15px;">
+                                    
+                                        <c:forEach items="${articles}" var="article">
+                                            <option value="${article.ref_article}">${article.designation}</option>
+                                        </c:forEach>
+                                </select>
                                 </c:if>
-                            </c:forEach>
-                        </td>
-                        <td>${ligneFacture.quantity}</td>
-                        <td>${ligneFacture.totalPrice}</td>
-                        <td>
-                            <form method="post" action="supprimer-line">
-                                <input type="hidden" name="lineStatusIndex" value="${lineStatus.index}">
-                                <input type="submit" class="delete-button" value="Supprimer">
-                            </form>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                            </div>
+                        </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="col-form-label" style="color: rgb(0,0,0);font-weight: bold;font-family: Inter, sans-serif;padding: 5px 5px 5px 5px;font-size: 14px;">Quantité vendue :</label>
+                        </div>
+                        <div class="col">
+                            <input type="number" name="quantiteVendue" style="font-family: Inter, sans-serif;font-size: 16px;padding: 5px 5px 5px 10px;border-width: 0px;border-radius: 15px;" placeholder="Quantité :" max="99999" min="1" step="1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 offset-lg-5">
+                            <input class="btn btn-primary" type="submit" style="font-family: Inter, sans-serif;font-size: 16px;background:cadetblue;border-width: 0px;border-radius: 15px;margin-top: 11px;" value="Ajouter">
+                        </div>
+                    </div>
+                    <c:if test="${not empty ligneFactureList}">
+                        <input type="hidden" value="${ligneFactureList}" name="ligneFactureList">
+                         </c:if>
+                </form>
+           
+        </div>
+    </div>
+    
+    <c:if test="${not empty ligneFactureList}">
+    <div class="row justify-content" style="margin-top: 25px;width: 80%;border-radius: 20px;border-width: 0px;padding-left: 0px;margin-left: -14px;margin-right: 6px;">
+        <div class="col-xl-10 col-xxl-9" style="padding-left: 0px;width: 100%;">
+            <div class="card shadow" style="width: 100%;">
+                <div class="card-header py-3" style="background: #f0f0f0;width: 100%;">
+                    <p class="text-center" style="font-size: 20px;font-weight: bold;font-family: Inter, sans-serif;color: rgb(0,0,0);">Liste des lignes facture</p>
+                </div>
+                <div class="card-body" style="background: rgb(255,255,255);width: 100%;">
+                    <c:if test="${not empty ligneFactureList}">
+                        <table class="table table-hover " style="text-align: center;width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="color: rgb(0,0,0);font-family: Inter, sans-serif;">Référence article</th>
+                                    <th style="color: rgb(0,0,0);font-family: Inter, sans-serif;">Désignation</th>
+                                    <th style="color: rgb(0,0,0);font-family: Inter, sans-serif;">Quantité vendue</th>
+                                    <th style="color: rgb(0,0,0);font-family: Inter, sans-serif;">Total Prix</th>
+                                    <th style="color: rgb(0,0,0);font-family: Inter, sans-serif;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach items="${ligneFactureList}" var="ligneFacture" varStatus="status">
+                                    <tr>
+                                        <td>${ligneFacture.articleRef}</td>
+                                        <td>${ligneFacture.designation}</td>
+                                        <td>${ligneFacture.quantity}</td>
+                                        <td>${ligneFacture.totalPrice}</td>
+                                        <td>
+                                            <form method="post" action="supprimer-line">
+                                                <input type="hidden" value="${status.index}" name="index">
+                                                <input class="btn btn-danger" type="submit" style="font-family: Inter, sans-serif;font-size: 14px;background: rgb(239,61,77);border-width: 0px;border-radius: 15px;" value="Supprimer">
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </c:if>
+                </div>
+            </div>
+        </div>
+    </div>
     </c:if>
+</div>

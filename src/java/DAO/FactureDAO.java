@@ -51,7 +51,7 @@ public class FactureDAO {
                 String modePaiement = factureResultSet.getString("mode_paiement");
                 int id_client = factureResultSet.getInt("id_client");
 
-                facture = new Facture(id, dateFacture, modePaiement, id_client);
+                facture = new Facture(id, (java.sql.Date) dateFacture, modePaiement, id_client);
             }
         }
 
@@ -101,7 +101,7 @@ public List<Facture> getAllFactures() {
                 String modePaiement = resultSet.getString("mode_paiement");
                 int id_client = resultSet.getInt("id_client");
 
-                Facture facture = new Facture(id, dateFacture, modePaiement, id_client);
+                Facture facture = new Facture(id, (java.sql.Date) dateFacture, modePaiement, id_client);
 
                 factures.add(facture);
             }
@@ -119,10 +119,11 @@ public void insertFacture(Facture facture) throws SQLException, ClassNotFoundExc
     PreparedStatement statement = null;
     try {
         // Insert the facture details
-        String factureQuery = "INSERT INTO factures (date_facture, mode_paiement, id_client) VALUES (CURRENT_DATE, ?, ?)";
+        String factureQuery = "INSERT INTO factures (date_facture, mode_paiement, id_client) VALUES (?, ?, ?)";
         statement = connection.prepareStatement(factureQuery, Statement.RETURN_GENERATED_KEYS); // Specify RETURN_GENERATED_KEYS
-        statement.setString(1, facture.getModePaiement());
-        statement.setInt(2, facture.getIdClient());
+      statement.setDate(1, new java.sql.Date(facture.getDateFacture().getTime()));
+        statement.setString(2, facture.getModePaiement());
+        statement.setInt(3, facture.getIdClient());
         statement.executeUpdate();
 
         // Get the auto-generated facture ID

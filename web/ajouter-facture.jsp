@@ -1,83 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-  <style>
-        
-         h5{    text-align: center}
-        form {
-            width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        input[type="submit"] {
-            background-color: #4caf50;
-            width: 20%;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .custom-select {
-          width: 100%;
-            border: 1px solid #ccc;
-               border-radius: 5px;
-           background-color: #f9f9f9;
-                font-size: 16px;
-              color: #555;
-                     }
-
-.custom-select option {
-    padding: 10px;
-}  
-    </style>
-    <h5>Ajouter une facture</h5>
-    <form method="post" action="ajouter-facture">
-        <label for="clientId">Client :</label>
-      
-           <select id="clientId" name="clientId" required class="custom-select">
+<!--<head>
+    <link rel="stylesheet" href="assets/css/Select-Search.css">
+    <link rel="stylesheet" href="assets/css/select2.css">
+</head>-->
+    <form method="post" action="ajouter-facture" style="  margin-top: 10%;margin-left: 20%;">
+           <c:if test="${not empty errorMessage}">
+        <p style="color: red;   text-align: start">${errorMessage}</p></c:if> 
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-lg-3"><label class="col-form-label col-form-label" style="display: grid;position: static;font-family: Inter, sans-serif;font-weight: bold;text-align: center;font-size: 16px;">Choiser&nbsp; client</label></div>
+                <div class="col"><select class="chosen" required="" style="color: #232323;--bs-body-bg: #cccccc;background: #cccccc;border-radius: 16px;border-width: 0px;border-color: #000000;font-family: Inter, sans-serif;padding: 10px 10px 10px 16px;text-align: left;" autofocus="" name="clientId">
     <c:choose>
         <c:when test="${not empty clients}">
             <option value="">Sélectionner un client</option>
@@ -89,8 +21,36 @@
             <option value="">Aucun client disponible</option>
         </c:otherwise>
     </c:choose>
-               </select><br><br>
-        <label for="modePaiement">Mode Paiement:</label>
-        <input type="text" id="modePaiement" name="modePaiement" required><br><br>
-        <input type="submit" value="Ajouter">
-    </form>  
+                    </select></div>
+            </div>
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-lg-3"><label class="col-form-label col-form-label" style="display: grid;position: static;font-family: Inter, sans-serif;font-weight: bold;text-align: center;font-size: 16px;margin-right: -1px;">Date de facture</label></div>
+                <div class="col-lg-9"><input style="align-items: center;padding: 10px 10px 10px 15px;border-radius: 16px;font-family: Inter, sans-serif;font-size: 14px;background: #cccccc;border-width: 0px;" required=""  autofocus="" minlength="10" maxlength="20" pattern="[0-9]+" type="date" name="date"></div>
+            </div>
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-lg-3"><label class="col-form-label col-form-label" style="display: grid;position: static;font-family: Inter, sans-serif;font-weight: bold;text-align: center;font-size: 16px;">Mode paiement</label></div>
+                <div class="col-lg-9"><select class="chosen" required="" style="color: #232323;--bs-body-bg: #cccccc;background: #cccccc;border-radius: 16px;border-width: 0px;border-color: #000000;font-family: Inter, sans-serif;padding: 10px 10px 10px 16px;text-align: left;" autofocus="" name="modePaiement">
+<option value="Visa">Visa</option>
+<option value="Mastercard">Mastercard</option>
+<option value="Discover">Discover</option>
+<option value="Maestro">Maestro</option>
+<option value="American Express">American Express</option>
+<option value="Diners Club">Diners Club</option>
+<option value="UnionPay">UnionPay</option>
+<option value="PayPal">PayPal</option>
+<option value="Alipay">Alipay</option>
+<option value="WeChat Pay">WeChat Pay</option>
+<option value="Google Pay">Google Pay</option>
+<option value="Amazon Pay">Amazon Pay</option>
+<option value="BitPay">BitPay</option>
+<option value="Payoneer">Payoneer</option>
+<option value="Cash App">Cash App</option>
+<option value="Samsung Pay">Samsung Pay</option>
+<option value="TransferWise">TransferWise</option>
+                    </select></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5" style="margin-top: 16px;"><input class="btn btn-primary d-grid float-end border " type="submit" style="width: 120px;font-family: Inter, sans-serif;font-size: 16px;border-radius: 20px;position: relative;display: grid;font-weight: bold;background: #00c993;border: 0px none var(--bs-purple);padding-top: 7px;padding-right: 20px;padding-bottom: 8px;margin-right: 9px;margin-left: 10px;margin-bottom: 9px;margin-top: 10px;padding-left: 14px;text-align: center;color: #000000;" value="Ajouter "></div>
+            </div>
+      
+    </form>

@@ -3,8 +3,12 @@ package Model;
 import java.io.Serializable;
 
 public class LigneFacture implements Serializable {
+
+   
+    
     private int numFacture;
     private String articleRef;
+    private String designation ;
     private int quantity;
     private double totalPrice;
 
@@ -42,6 +46,14 @@ public void setTotalPrice(double totalPrice) {
     public String getArticleRef() {
         return articleRef;
     }
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+    
+     public String getDesignation() {
+        return designation;
+    }
+
 
     public void setArticleRef(String articleRef) {
         this.articleRef = articleRef;

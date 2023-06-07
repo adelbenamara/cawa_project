@@ -7,6 +7,7 @@ package Model;
 
 import java.io.Serializable;
 import java.util.Date;
+//import java.sql.Date;
 import java.util.List;
 
 public class Facture implements Serializable{
@@ -19,8 +20,9 @@ public class Facture implements Serializable{
     private int idClient;
     private List<LigneFacture> ligneFactureList;
 
-    public Facture(String modePaiement, int idClient) {
+    public Facture(String modePaiement, int idClient, Date dateFacture) {
         this.modePaiement = modePaiement;
+        this.dateFacture = dateFacture;
         this.idClient = idClient;
     }
 

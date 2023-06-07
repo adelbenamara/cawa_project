@@ -32,14 +32,14 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     String action = request.getServletPath();
      
         if (action.equals("/logout")) {
-            System.out.println("dakhlat");
+           
             // Logout the user by invalidating the session
             HttpSession session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
             }
             // Redirect the user to the login page
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("login").forward(request, response);
         }if (action.equals("/login")) {
          request.getRequestDispatcher("login.jsp").forward(request, response);}
 }

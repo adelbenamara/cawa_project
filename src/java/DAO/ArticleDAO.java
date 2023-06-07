@@ -1,7 +1,6 @@
 package DAO;
 
 import Model.Article;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +24,29 @@ public class ArticleDAO {
 
         try (
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM articles WHERE is_delete = 0");
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String  ref_article = resultSet.getString("ref_article");
+                String designation = resultSet.getString("designation");
+                double price = resultSet.getDouble("prix");
+                int stockQuantity = resultSet.getInt("quantite_stock");
+
+                Article article = new Article(ref_article, designation, price, stockQuantity);
+                articles.add(article);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des articles : " + e.getMessage());
+        }
+
+        return articles;
+    }
+    public List<Article> getAllArticlesAll() throws SQLException {
+        List<Article> articles = new ArrayList<>();
+
+        try (
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM articles ");
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {

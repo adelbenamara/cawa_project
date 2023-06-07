@@ -52,7 +52,7 @@
             <div class="col"><a href="ajouter-facture"style="text-align: center;position: relative;display: grid;font-family: Inter, sans-serif;font-weight: bold;color: var(--bs-black);border-radius: 20px;padding-bottom: 0px;margin-right: 0px;margin-left: 0px;padding-top: 0px;margin-top: 17px;margin-bottom: 17px;">Ajouter une facture</a></div>
         </div>
     </nav>
-    <div class="container" style="position: fixed;width: 70%;float: right;bottom: 2%;right: 0;/*margin-top: 31%;*/height: 80%;/*padding-right: 53px;*/border-radius: 20px;/*border-style: solid;*//*border-color: rgb(255,255,255);*//*--bs-body-bg: #fff;*/background: #ffffff;margin-right: 5%;">
+    <div class="container" id="container" style="position: fixed;width: 70%;float: right;bottom: 2%;right: 0;/*margin-top: 31%;*/height: 80%;/*padding-right: 53px;*/border-radius: 20px;/*border-style: solid;*//*border-color: rgb(255,255,255);*//*--bs-body-bg: #fff;*/background: #ffffff;margin-right: 5%;">
     <c:if test="${not empty pageToInclude}">
     <jsp:include page="${pageToInclude}" />
      </c:if>

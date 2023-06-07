@@ -50,9 +50,7 @@ public class ClientDAO {
             }
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
-        } finally {
-            // Close the resultSet, statement, and connection (similar to other methods)
-        }
+        } 
 
         return client;
     }
@@ -64,6 +62,32 @@ public class ClientDAO {
 
         try {
            String query = "SELECT * FROM clients WHERE is_delete = 0 ;";
+            statement = connection.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String nom = resultSet.getString("nom");
+                 String telephone = resultSet.getString("telephone");
+                String email = resultSet.getString("email");
+         
+                Client client = new Client(id, nom,telephone, email);
+                clients.add(client);
+            }
+        } catch (SQLException e) {
+           System.out.println(" erour :"+e.getMessage());  
+        }
+
+        return clients;
+    }
+    
+     public List<Client> getAllClientsAll()   {
+        List<Client> clients = new ArrayList<>();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+           String query = "SELECT * FROM clients ;";
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
 

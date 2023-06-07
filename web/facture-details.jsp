@@ -43,6 +43,11 @@
         p {
             margin: 10px 0;
         }
+           #container {
+         
+           overflow: auto;
+   
+     }
     </style>
      <c:if test="${not empty facture }">
     <h4>Facture Information</h4>

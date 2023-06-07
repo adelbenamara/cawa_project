@@ -12,14 +12,16 @@ import Model.Facture;
 import Model.Client;
 import Model.LigneFacture;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import static java.util.Collections.list;
+import java.util.Date;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -112,12 +114,12 @@ public class FactureController extends HttpServlet {
     facture.calculateTotalTTC(Facture.TVA);
    List<Article> articles = new ArrayList<>();
         try {
-            articles = articleDAO.getAllArticles();
+            articles = articleDAO.getAllArticlesAll();
         } catch (SQLException ex) {
             Logger.getLogger(FactureController.class.getName()).log(Level.SEVERE, null, ex);
         }
    List<LigneFacture> ligneFactureList = facture.getLigneFactureList();
-   List<Client> clients =  clientDAO.getAllClients();
+   List<Client> clients =  clientDAO.getAllClientsAll();
     session.setAttribute("facture", facture);
     session.setAttribute("clients", clients);
     session.setAttribute("ligneFactureList", ligneFactureList);
@@ -126,30 +128,47 @@ public class FactureController extends HttpServlet {
                 request.getRequestDispatcher("accueil.jsp").forward(request, response);
 }
 
-    
 private void addLine(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ClassNotFoundException {
     String modePaiement = request.getParameter("modePaiement");
     String clientIdStr = request.getParameter("clientId");
+    String dateStr = request.getParameter("date");
+    Date dateFacture;
 
-    if (modePaiement != null && !modePaiement.isEmpty() && clientIdStr != null && !clientIdStr.isEmpty()) {
+    if (modePaiement != null && !modePaiement.isEmpty() && clientIdStr != null && !clientIdStr.isEmpty() && dateStr != null && !dateStr.isEmpty()) {
         try {
             int clientId = Integer.parseInt(clientIdStr);
 
-            // Vérification de la validité du client
+            // Verification of the validity of the client
             if (!clientDAO.isValidClient(clientId)) {
-                // Afficher un message d'erreur et rediriger vers la page d'ajout de facture
+                // Display an error message and redirect to the add facture page
                 request.setAttribute("errorMessage", "Client invalide");
-                  request.setAttribute("pageToInclude", "ajouter-facture.jsp");
+                request.setAttribute("pageToInclude", "ajouter-facture.jsp");
+                request.getRequestDispatcher("accueil.jsp").forward(request, response);
+                return;
+            }
+
+            // Validate the date format
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormat.setLenient(false);
+            try {
+                
+                dateFacture =  dateFormat.parse(dateStr);
+            } catch (ParseException e) {
+                // Display an error message and redirect to the add facture page
+                request.setAttribute("errorMessage", "Format de date invalide. Utilisez le format aaaa-MM-jj");
+                request.setAttribute("pageToInclude", "ajouter-facture.jsp");
                 request.getRequestDispatcher("accueil.jsp").forward(request, response);
                 return;
             }
 
             // Create a new Facture object and store it in session
             HttpSession session = request.getSession(false);
-            Facture facture = new Facture(modePaiement, clientId);
+            Facture facture = new Facture(modePaiement, clientId, dateFacture);
+            session.removeAttribute("ligneFactureList");
 
             // Retrieve the ligneFactureList from session or create a new one
             List<Article> articles = articleDAO.getAllArticles();
+            System.out.println("les article :");
             List<Client> clients = clientDAO.getAllClients();
             session.setAttribute("facture", facture);
             session.setAttribute("articles", articles);
@@ -157,20 +176,21 @@ private void addLine(HttpServletRequest request, HttpServletResponse response) t
             request.setAttribute("pageToInclude", "ajouter-ligne.jsp");
             request.getRequestDispatcher("accueil.jsp").forward(request, response);
         } catch (NumberFormatException ex) {
-            // Afficher un message d'erreur et rediriger vers la page d'ajout de facture
-                request.setAttribute("errorMessage", "ID client invalide");            request.getRequestDispatcher("accueil.jsp").forward(request, response);
-                request.setAttribute("pageToInclude", "ajouter-facture.jsp");
-                request.getRequestDispatcher("accueil.jsp").forward(request, response);
+            // Display an error message and redirect to the add facture page
+            request.setAttribute("errorMessage", "ID client invalide");
+            request.setAttribute("pageToInclude", "ajouter-facture.jsp");
+            request.getRequestDispatcher("accueil.jsp").forward(request, response);
         }
     } else {
-        // Afficher un message d'erreur et rediriger vers la page d'ajout de facture
+        // Display an error message and redirect to the add facture page
         request.setAttribute("errorMessage", "Veuillez remplir tous les champs");
         request.setAttribute("pageToInclude", "ajouter-facture.jsp");
-                request.getRequestDispatcher("accueil.jsp").forward(request, response);
+        request.getRequestDispatcher("accueil.jsp").forward(request, response);
     }
 }
 
-   
+
+
 private void addLineFacture(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String articleRef = request.getParameter("article");
     String quantiteVendue = request.getParameter("quantiteVendue");
@@ -188,6 +208,7 @@ private void addLineFacture(HttpServletRequest request, HttpServletResponse resp
                 double totalPrice = article.getPrice() * quantity;
 
                 LigneFacture line = new LigneFacture(articleId, quantity, totalPrice);
+                line.setDesignation(article.getDesignation());
                 HttpSession session = request.getSession();
                 ArrayList<LigneFacture> ligneFactureList = (ArrayList<LigneFacture>) session.getAttribute("ligneFactureList");
                 if (ligneFactureList == null) {
@@ -245,9 +266,9 @@ private void deleteLine(HttpServletRequest request, HttpServletResponse response
         throws ServletException, IOException {
     HttpSession session = request.getSession(false);
     ArrayList<LigneFacture> ligneFactureList = (ArrayList<LigneFacture>) session.getAttribute("ligneFactureList");
-
-    if (ligneFactureList != null) {
-        String lineIndex = request.getParameter("lineStatusIndex");
+String lineIndex = request.getParameter("index");
+    if (ligneFactureList != null && !lineIndex.isEmpty() ) {
+        
         int index = Integer.parseInt(lineIndex);
 
         if (index >= 0 && index < ligneFactureList.size()) {

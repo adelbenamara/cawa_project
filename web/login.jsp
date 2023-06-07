@@ -33,6 +33,7 @@
             <div class="col-xxl-4" style="/*height: 100%;*/background: #ffffff;width: 40%;padding-right: 72px;margin-right: -59px;border-radius: 20px;/*padding-bottom: 96px;*//*padding-top: 204px;*/border-top-right-radius: 0px;border-bottom-right-radius: 0px;margin-top: -4px;margin-bottom: 23px;">
                 <!-- Start: Login Form Basic -->
                 <form method="post" action="Login" class="form"  >
+                 <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">
                 <section class="py-4 py-xl-5" style="padding-right: 126px;padding-bottom: 10px;/*margin-bottom: -42px;*/margin-right: -22px;/*margin-top: 6px;*/">
                     <div class="container">
                         <div class="row">
