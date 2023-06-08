@@ -12,6 +12,9 @@
             border-collapse: collapse;
             margin-bottom: 20px;
         }
+         #container {
+        overflow: auto;
+    }
 
         th, td {
             padding: 8px;

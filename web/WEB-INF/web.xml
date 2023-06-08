@@ -33,7 +33,11 @@
     
     <filter-mapping>
     <filter-name>CSRFTokenFilter</filter-name>
-     <url-pattern>/Login</url-pattern>
+    <url-pattern>/ajouter-line</url-pattern>
+    <url-pattern>/ajouter-client</url-pattern>
+    <url-pattern>/ajouter-article</url-pattern>
+    <url-pattern>/ajouter-facture</url-pattern>
+    <url-pattern>/Login</url-pattern>
     </filter-mapping>
 
  <filter>

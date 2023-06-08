@@ -1,3 +1,4 @@
+<%@page import="Controller.CSRFTokenUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!--<head>
@@ -5,6 +6,12 @@
     <link rel="stylesheet" href="assets/css/select2.css">
 </head>-->
     <form method="post" action="ajouter-facture" style="  margin-top: 10%;margin-left: 20%;">
+           <%-- Generate and add CSRF token to the session --%>
+                    <% 
+                        String csrfToken = CSRFTokenUtil.generateToken();
+                        session.setAttribute("csrfToken", csrfToken);
+                    %>
+                    <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
            <c:if test="${not empty errorMessage}">
         <p style="color: red;   text-align: start">${errorMessage}</p></c:if> 
             <div class="row" style="margin-bottom: 15px;">

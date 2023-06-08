@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
 public class LoginController extends HttpServlet {
 
     private static final int MAX_LOGIN_ATTEMPTS = 3; // Maximum allowed login attempts
-    private static final int LOCKOUT_DURATION = 15 * 1000; // Lockout duration in milliseconds
+    private static final int LOCKOUT_DURATION = 30 * 1000; // Lockout duration in milliseconds
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

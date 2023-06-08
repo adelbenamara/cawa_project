@@ -3,6 +3,7 @@
     Created on : May 22, 2023, 12:56:13 AM
     Author     : adel
 --%>
+<%@page import="Controller.CSRFTokenUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -62,6 +63,12 @@
         <div class="col">
            
                 <form method="post" action="ajouter-line">
+                       <%-- Generate and add CSRF token to the session --%>
+                    <% 
+                        String csrfToken = CSRFTokenUtil.generateToken();
+                        session.setAttribute("csrfToken", csrfToken);
+                    %>
+                    <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
                     
                         <div class="row" style="margin: 10px;">
                             <div class="col-lg-3">

@@ -9,3 +9,4 @@ glassfichserver 4.1
 libs :  #MySQLDriver            {Connection sql}
         #JAVADB_DRIVER_LABEL    {java-sql}
         #itextpdf-5.5.9.jar     {print facture pdf}
+        #converter-htmlescape-0.8.15.jar   { XSS security}
