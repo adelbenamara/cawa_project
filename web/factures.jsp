@@ -7,6 +7,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <style>
         table {
+            margin-top: 1%;
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;

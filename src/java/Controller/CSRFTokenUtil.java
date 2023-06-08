@@ -17,7 +17,7 @@ public class CSRFTokenUtil {
         SecureRandom random = new SecureRandom();
         byte[] tokenBytes = new byte[32]; // Adjust the token length as needed
         random.nextBytes(tokenBytes);
-
+        
         // Encode the random bytes to a secure string representation
         String token = Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
 

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <!-- Add welcome-file-list -->
-<!--    <welcome-file-list>
+
+    <welcome-file-list>
         <welcome-file>
         login.jsp 
         </welcome-file>
-    </welcome-file-list>-->
-    <!-- servlet -->
-      <servlet>
-        <servlet-name>Root</servlet-name>
-        <servlet-class>Controller.Root</servlet-class>
-    </servlet>
+    </welcome-file-list>
+    
+    <error-page>
+    <error-code>500</error-code>
+    <location>/error500.jsp</location>
+    </error-page>
+
+
     <servlet>
         <servlet-name>ClientController</servlet-name>
         <servlet-class>Controller.ClientController</servlet-class>
@@ -23,16 +25,18 @@
         <servlet-name>ArticleController</servlet-name>
         <servlet-class>Controller.ArticleController</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>LoginController</servlet-name>
-        <servlet-class>Controller.LoginController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>HomeController</servlet-name>
-        <servlet-class>Controller.HomeController</servlet-class>
-    </servlet>
-<!--     Add the filter configuration 
--->    <filter>
+  
+    <filter>
+    <filter-name>CSRFTokenFilter</filter-name>
+    <filter-class>Controller.CSRFTokenFilter</filter-class>
+    </filter>
+    
+    <filter-mapping>
+    <filter-name>CSRFTokenFilter</filter-name>
+     <url-pattern>/Login</url-pattern>
+    </filter-mapping>
+
+ <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>Controller.AuthenticationFilter</filter-class>
     </filter>
@@ -55,29 +59,34 @@
         <url-pattern>/articles</url-pattern>
         <url-pattern>/generate-pdf</url-pattern>
     </filter-mapping>
-    <!-- Add the filter configuration -->
-    <filter>
-    <filter-name>CSRFTokenFilter</filter-name>
-    <filter-class>Controller.CSRFTokenFilter</filter-class>
-</filter>
-<filter-mapping>
-    <filter-name>CSRFTokenFilter</filter-name>
-     <url-pattern>/Login</url-pattern>
-</filter-mapping>
 
-    
-    
-    <!-- Add the servlet-mapping -->
+
+
+
+      <servlet>
+        <servlet-name>LoginController</servlet-name>
+        <servlet-class>Controller.LoginController</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>GeneratePdfServlet</servlet-name>
         <servlet-class>Controller.GeneratePdfServlet</servlet-class>
     </servlet>
-    
-    <servlet-mapping>
-        <servlet-name>Root</servlet-name>
-        <url-pattern>/</url-pattern>
-        <url-pattern>/login</url-pattern>
+     <servlet>
+        <servlet-name>HomeController</servlet-name>
+        <servlet-class>Controller.HomeController</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>HomeController</servlet-name>
+        <url-pattern>/home</url-pattern>
     </servlet-mapping>
+       <servlet-mapping>
+        <servlet-name>LoginController</servlet-name>
+       <url-pattern>/Login</url-pattern>
+        <url-pattern>/logout</url-pattern>
+        <url-pattern>/login</url-pattern>
+<!--        <url-pattern>/</url-pattern>-->
+    </servlet-mapping>
+    
     
     <servlet-mapping>
         <servlet-name>ClientController</servlet-name>
@@ -105,7 +114,8 @@
         <servlet-name>LoginController</servlet-name>
        <url-pattern>/Login</url-pattern>
         <url-pattern>/logout</url-pattern>
-       
+        <url-pattern>/login</url-pattern>
+<!--        <url-pattern>/</url-pattern>-->
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
@@ -115,6 +125,9 @@
         <servlet-name>GeneratePdfServlet</servlet-name>
         <url-pattern>/generate-pdf</url-pattern>
     </servlet-mapping>
+
+    
+   
     <session-config>
         <session-timeout>
             30

@@ -56,7 +56,7 @@ public class FactureController extends HttpServlet {
         }else if (action.equals("/factures") ) {  
             
                 List<Facture> factures = factureDAO.getAllFactures();
-                List<Client> clients =   clientDAO.getAllClients();             
+                List<Client> clients =   clientDAO.getAllClientsAll();             
                 session.setAttribute("factures", factures);
                 session.setAttribute("clients", clients); 
                 request.setAttribute("pageToInclude", "factures.jsp");

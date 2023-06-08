@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+
 public class ArticleController extends HttpServlet {
     
     private ArticleDAO articleDAO;
@@ -73,41 +75,57 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
     }
 
 private void addArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException, ClassNotFoundException {
-    // Récupérer les données du formulaire
+    // Retrieve data from the form
     String ref_article =  req.getParameter("ref_article");
     String designation = req.getParameter("designation");
-    String priceStr =req.getParameter("price");
-    String  stockQuantityStr = req.getParameter("stockQuantity");
+    String priceStr = req.getParameter("price");
+    String stockQuantityStr = req.getParameter("stockQuantity");
     
-   String errorMessage = validateArticleFields(ref_article, designation, priceStr, stockQuantityStr);
-if (errorMessage != null) {
-    // Afficher le message d'erreur spécifique et rediriger vers la page du formulaire d'ajout
-    req.setAttribute("errorMessage", errorMessage);
-    req.setAttribute("pageToInclude", "ajouter-article.jsp");
-    req.getRequestDispatcher("accueil.jsp").forward(req, resp);
-    return;
-}
+    // Validate the input fields
+    String errorMessage = validateArticleFields(ref_article, designation, priceStr, stockQuantityStr);
+    if (errorMessage != null) {
+        // Display the specific error message and redirect to the add-article form page
+        req.setAttribute("errorMessage", errorMessage);
+        req.setAttribute("pageToInclude", "ajouter-article.jsp");
+        req.getRequestDispatcher("accueil.jsp").forward(req, resp);
+        return;
+    }
 
-     double price = Double.parseDouble(priceStr);
-    int stockQuantity = Integer.parseInt(stockQuantityStr);
-    // Vérifier si l'article existe déjà dans la base de données
+    double price;
+    int stockQuantity;
+    
+    try {
+        // Parse the input fields after validating them
+        price = Double.parseDouble(priceStr);
+        stockQuantity = Integer.parseInt(stockQuantityStr);
+    } catch (NumberFormatException e) {
+        // Handle parsing errors and redirect to the add-article form page
+        errorMessage = "Invalid price or stock quantity format.";
+        req.setAttribute("errorMessage", errorMessage);
+        req.setAttribute("pageToInclude", "ajouter-article.jsp");
+        req.getRequestDispatcher("accueil.jsp").forward(req, resp);
+        return;
+    }
+
+    // Check if the article already exists in the database
     Article existingArticle = articleDAO.getArticleByID(ref_article);
     if (existingArticle != null) {
-        // L'article existe déjà, augmenter la quantité
+        // The article already exists, increase the quantity
         existingArticle.setStockQuantity(existingArticle.getStockQuantity() + stockQuantity);
         existingArticle.setPrice(price);
         articleDAO.updateArticle(existingArticle);
     } else {
-        // Créer un nouvel objet Article
+        // Create a new Article object
         Article article = new Article(ref_article, designation, price, stockQuantity);
 
-        // Ajouter l'article à la base de données
+        // Add the article to the database
         articleDAO.addArticle(article);
     }
 
-    // Rediriger vers la page des articles
+    // Redirect to the articles page
     resp.sendRedirect(req.getContextPath() + "/articles");
 }
+
 
 
     private void deleteArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
