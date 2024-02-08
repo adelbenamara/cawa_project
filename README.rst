@@ -12,3 +12,9 @@ libs :  #MySQLDriver            {Connection sql}
         #converter-htmlescape-0.8.15.jar   { XSS security}
 
 .. image::  https://github.com/adelbenamara/cawa_project/blob/main/image_cawa/acciull.png
+
+.. image::  https://github.com/adelbenamara/cawa_project/blob/main/image_cawa/login.png
+
+.. image::  https://github.com/adelbenamara/cawa_project/blob/main/image_cawa/add clien.png
+
+.. image::  https://github.com/adelbenamara/cawa_project/blob/main/image_cawa/add article.png
