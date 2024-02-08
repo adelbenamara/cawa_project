@@ -11,4 +11,4 @@ libs :  #MySQLDriver            {Connection sql}
         #itextpdf-5.5.9.jar     {print facture pdf}
         #converter-htmlescape-0.8.15.jar   { XSS security}
 
-.. image::  ./image_cawa/acciull.png
+.. image::  https://github.com/adelbenamara/cawa_project/blob/main/image_cawa/acciull.png
