@@ -11,5 +11,4 @@ libs :  #MySQLDriver            {Connection sql}
         #itextpdf-5.5.9.jar     {print facture pdf}
         #converter-htmlescape-0.8.15.jar   { XSS security}
 
-[image1](image_cawa/acciull.png)
-[image2](image_cawa/add article.png)
+.. image::  ./image_cawa/acciull.png
